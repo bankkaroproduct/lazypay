@@ -641,8 +641,8 @@ All colors MUST be HSL.
     .cg-prev-btn {
       margin-bottom: 16px;
       border-width: 1px;
-      border-color: #004E92;
-      color: #004E92;
+      border-color: #FF1E7E;
+      color: #FF1E7E;
       background-color: transparent;
     }
 
@@ -672,13 +672,13 @@ All colors MUST be HSL.
 
     .cg-next-btn {
       margin-top: 20px;
-      background-color: #004E92;
+      background-color: #FF1E7E;
       color: #ffffff;
-      border-color: #004E92;
+      border-color: #FF1E7E;
     }
 
     .cg-next-btn:hover {
-      background-color: #003A6E;
+      background-color: #E0156B;
     }
 
     .cg-next-btn:active {
@@ -843,9 +843,12 @@ All colors MUST be HSL.
 
 .lp-grid-bg {
   background-image:
-    linear-gradient(rgba(255, 30, 126, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 30, 126, 0.05) 1px, transparent 1px);
-  background-size: 60px 60px;
+    linear-gradient(rgba(255, 30, 126, 0.09) 0.5px, transparent 0.5px),
+    linear-gradient(90deg, rgba(255, 30, 126, 0.09) 0.5px, transparent 0.5px);
+  background-size: 64px 64px;
+  background-position: -1px -1px;
+  -webkit-mask-image: radial-gradient(ellipse 55% 50% at 50% 45%, #000 0%, rgba(0,0,0,0.65) 45%, transparent 90%);
+  mask-image: radial-gradient(ellipse 55% 50% at 50% 45%, #000 0%, rgba(0,0,0,0.65) 45%, transparent 90%);
 }
 
 .lp-dark-bg {
@@ -1035,4 +1038,134 @@ All colors MUST be HSL.
 @keyframes lp-pulse-dot {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+/* ============================================
+   Editorial Hero — Floating Card Stack
+   ============================================ */
+.lp-card-stack {
+  position: relative;
+  perspective: 1400px;
+  perspective-origin: 60% 40%;
+}
+
+.lp-floating-card {
+  position: absolute;
+  width: 290px;
+  height: 180px;
+  border-radius: 18px;
+  box-shadow:
+    0 25px 50px -12px rgba(255, 30, 126, 0.25),
+    0 12px 24px -8px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  background: linear-gradient(135deg, #1a1a2e 0%, #2d0e2a 100%);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.lp-floating-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.lp-fc-1 {
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, 0) rotateY(-18deg) rotateX(8deg) rotateZ(-6deg);
+  animation: lp-float-card-1 8s ease-in-out infinite;
+  z-index: 3;
+}
+
+.lp-fc-2 {
+  top: 90px;
+  left: 50%;
+  transform: translate(-30%, 0) rotateY(-15deg) rotateX(6deg) rotateZ(4deg);
+  animation: lp-float-card-2 9s ease-in-out infinite;
+  z-index: 2;
+  opacity: 0.85;
+}
+
+.lp-fc-3 {
+  top: 180px;
+  left: 50%;
+  transform: translate(-70%, 0) rotateY(-12deg) rotateX(4deg) rotateZ(-2deg);
+  animation: lp-float-card-3 10s ease-in-out infinite;
+  z-index: 1;
+  opacity: 0.7;
+}
+
+@keyframes lp-float-card-1 {
+  0%, 100% { transform: translate(-50%, 0) rotateY(-18deg) rotateX(8deg) rotateZ(-6deg); }
+  50% { transform: translate(-50%, -16px) rotateY(-15deg) rotateX(10deg) rotateZ(-4deg); }
+}
+
+@keyframes lp-float-card-2 {
+  0%, 100% { transform: translate(-30%, 0) rotateY(-15deg) rotateX(6deg) rotateZ(4deg); }
+  50% { transform: translate(-30%, -12px) rotateY(-12deg) rotateX(8deg) rotateZ(6deg); }
+}
+
+@keyframes lp-float-card-3 {
+  0%, 100% { transform: translate(-70%, 0) rotateY(-12deg) rotateX(4deg) rotateZ(-2deg); }
+  50% { transform: translate(-70%, -8px) rotateY(-10deg) rotateX(6deg) rotateZ(0deg); }
+}
+
+/* ============================================
+   Marquee — Infinite scrolling trust strip
+   ============================================ */
+.lp-marquee-track {
+  display: flex;
+  gap: 4rem;
+  animation: lp-marquee-scroll 30s linear infinite;
+  will-change: transform;
+}
+
+@keyframes lp-marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.lp-marquee-mask {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+}
+
+/* ============================================
+   Editorial Step Numbers
+   ============================================ */
+.lp-step-number {
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(4rem, 12vw, 8rem);
+  font-weight: 700;
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  background: linear-gradient(180deg, rgba(255, 30, 126, 0.15) 0%, rgba(255, 30, 126, 0) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(255, 30, 126, 0.4);
+}
+
+/* ============================================
+   Section divider with pink accent
+   ============================================ */
+.lp-section-divider {
+  position: relative;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 30, 126, 0.3), transparent);
+}
+
+.lp-section-divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #FF1E7E;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 16px rgba(255, 30, 126, 0.6);
 }

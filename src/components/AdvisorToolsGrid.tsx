@@ -63,8 +63,6 @@ const AdvisorToolsGrid = () => {
               className="group relative rounded-3xl p-6 sm:p-7 lg:p-8 flex flex-col transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl overflow-hidden"
               style={{ background: tool.bg }}
             >
-              {/* Decorative shape */}
-              <div className="absolute -bottom-8 -right-8 w-32 h-32 rounded-3xl bg-white/30 rotate-12 group-hover:rotate-6 transition-transform duration-500" />
 
               <div className="relative z-10 flex flex-col h-full">
                 {/* Icon */}

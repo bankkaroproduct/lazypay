@@ -20,10 +20,12 @@ const ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://localhost:3001',
     'http://localhost:3002',
+    'https://bankkaro.com',
+    'https://bankexpert.bankkaro.com',
+    'https://shubham-bank-expert.vercel.app',
+    'https://shubham-bank-expert-bankkaroproducts-projects.vercel.app',
     'https://lazypay.com',
-    'https://lazypay.lazypay.com',
     'https://lazypay.vercel.app',
-    'https://lazypay-bankkaroproducts-projects.vercel.app',
 ].filter(Boolean) as string[];
 
 export async function POST(request: NextRequest) {
@@ -63,7 +65,7 @@ export async function POST(request: NextRequest) {
     // --- end rate limiting ---
 
     const apiKey = process.env.PARTNER_API_KEY;
-    const tokenUrl = process.env.PARTNER_TOKEN_URL || 'https://platform.lazypay.com/partner/token';
+    const tokenUrl = process.env.PARTNER_TOKEN_URL || 'https://platform.bankkaro.com/partner/token';
 
     if (!apiKey) {
         console.error('PARTNER_API_KEY is not defined in environment variables');

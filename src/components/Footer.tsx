@@ -83,11 +83,21 @@ const Footer = () => {
             </p>
             <a
               href={`mailto:${brandConfig.email}`}
-              className="inline-flex items-center gap-2 text-sm text-slate-300 hover:text-[#FF1E7E] transition-colors group"
+              className="inline-flex items-center gap-2 text-sm text-slate-300 hover:text-[#FF1E7E] transition-colors group mb-5"
             >
               <Mail className="w-4 h-4" />
               <span className="border-b border-transparent group-hover:border-[#FF1E7E]">{brandConfig.email}</span>
             </a>
+
+            {/* Powered by Bankkaro */}
+            <div className="flex items-center gap-2 opacity-60 hover:opacity-100 transition-opacity">
+              <span className="text-[10px] uppercase tracking-wider font-medium text-slate-400">Powered by</span>
+              <img
+                src="/bankkaro-powered.svg"
+                alt="BankKaro"
+                className="h-5 w-auto invert brightness-200"
+              />
+            </div>
           </div>
 
           {/* Links columns - desktop */}

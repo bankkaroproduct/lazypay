@@ -11,8 +11,9 @@ const PLACEHOLDER_RE = /\{[^}]+\}/;
 
 const ALLOWED_DOMAINS = [
   'track.techtrack.in',
+  'bankkaro.com',
+  'platform.bankkaro.com',
   'lazypay.com',
-  'platform.lazypay.com',
   'sbicard.com',
   'hdfcbank.com',
   'axisbank.com',

@@ -1,7 +1,7 @@
 ﻿"use client";
 import { useState, useEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
-import { ChevronDown, X } from "lucide-react";
+import { ChevronDown, X, Home as HomeIcon, CreditCard, Sparkles, LayoutGrid, TrendingUp, BookOpen, ArrowUpRight, Youtube, Instagram, Facebook } from "lucide-react";
 import { Link } from "@/components/Link";
 import NavLink from "@/components/NavLink";
 import { analytics } from "@/services/analytics";
@@ -135,118 +135,166 @@ const MobileMenuOverlay = ({
         onClick={handleBackdropClick}
       >
         <div
-          className="relative flex flex-col flex-1 bg-white dark:bg-slate-900 shadow-2xl"
+          className="relative flex flex-col flex-1 bg-white shadow-2xl"
           onClick={handleDialogClick}
         >
-          {/* Header */}
-          <div className="flex items-center justify-between px-6 pt-4 pb-3 border-b border-slate-200 dark:border-slate-700">
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="h-9 w-9 rounded-full bg-white flex items-center justify-center flex-shrink-0 shadow-sm overflow-hidden">
-                <img src={logoSrc} alt={brandConfig.name} className="h-8 w-8 rounded-full object-contain" />
-              </div>
-              <span className="text-sm font-bold truncate" style={{ color: '#004E92' }}>
-                {brandConfig.name}
+          {/* Header with LAZYPAY wordmark */}
+          <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-slate-100">
+            <div className="flex items-center gap-2">
+              <div className="lp-logo-mark" />
+              <span className="font-display text-xl font-extrabold tracking-tight text-[#0A0A0F]">
+                LAZY<span className="text-[#FF1E7E]">PAY</span>
               </span>
             </div>
             <button
               ref={firstFocusRef}
-              className="touch-target flex items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              className="touch-target w-10 h-10 flex items-center justify-center rounded-full bg-pink-50 hover:bg-pink-100 active:bg-pink-100 transition-colors"
               onClick={onClose}
               aria-label="Close menu"
             >
-              <X className="w-5 h-5 text-slate-700 dark:text-slate-300" />
+              <X className="w-5 h-5 text-[#FF1E7E]" strokeWidth={2.5} />
             </button>
           </div>
 
           {/* Content */}
-          <div className="flex-1 overflow-y-auto px-6 py-5 space-y-4 bg-white dark:bg-slate-900">
-            {/* Home */}
-            <Link
-              to="/"
-              className="block rounded-2xl border-2 border-slate-200 dark:border-slate-700 px-5 py-4 text-lg font-bold text-slate-900 dark:text-slate-100 hover:border-[#004E92] hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
-              onClick={onClose}
-            >
-              Home
-            </Link>
+          <div className="flex-1 overflow-y-auto px-5 py-5 bg-white">
+            {/* Primary Navigation - pill chips */}
+            <div className="grid grid-cols-2 gap-3 mb-6">
+              <Link
+                to="/"
+                className="group flex flex-col items-start justify-between rounded-3xl p-5 h-32 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                style={{ background: "linear-gradient(135deg, #FFE4EF 0%, #FFCEDF 100%)" }}
+                onClick={onClose}
+              >
+                <div className="w-10 h-10 rounded-2xl bg-white/70 backdrop-blur flex items-center justify-center">
+                  <HomeIcon className="w-5 h-5 text-[#FF1E7E]" strokeWidth={2.2} />
+                </div>
+                <span className="font-display text-lg font-bold text-pink-950">Home</span>
+              </Link>
 
-            {/* Discover */}
-            <Link
-              to="/cards"
-              className="block rounded-2xl border-2 border-slate-200 dark:border-slate-700 px-5 py-4 text-lg font-bold text-slate-900 dark:text-slate-100 hover:border-[#004E92] hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
-              onClick={onClose}
-            >
-              Discover
-            </Link>
+              <Link
+                to="/cards"
+                className="group flex flex-col items-start justify-between rounded-3xl p-5 h-32 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                style={{ background: "linear-gradient(135deg, #EFE9FB 0%, #DCD0F5 100%)" }}
+                onClick={onClose}
+              >
+                <div className="w-10 h-10 rounded-2xl bg-white/70 backdrop-blur flex items-center justify-center">
+                  <CreditCard className="w-5 h-5 text-purple-700" strokeWidth={2.2} />
+                </div>
+                <span className="font-display text-lg font-bold text-purple-950">Discover</span>
+              </Link>
+            </div>
 
             {/* Tools Section */}
-            <div className="space-y-3 pt-2">
-              <p className="text-xs font-bold uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400 px-1">
-                🛠️ Tools
-              </p>
+            <div className="mb-6">
+              <div className="flex items-center gap-2 mb-3 px-1">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#FF1E7E]" />
+                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
+                  AI Tools
+                </p>
+              </div>
               <div className="space-y-2">
-                {sections
-                  .find((s) => s.title === "Tools")
-                  ?.items.map((tool) =>
-                    tool.to ? (
-                      <Link
-                        key={tool.to}
-                        to={tool.to}
-                        className="block rounded-2xl border-2 border-slate-200 dark:border-slate-700 px-5 py-4 hover:border-[#004E92] hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
-                        onClick={onClose}
-                      >
-                        <div className="font-bold text-slate-900 dark:text-slate-100">
-                          {tool.label}
-                        </div>
-                        {tool.description && (
-                          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
-                            {tool.description}
-                          </p>
-                        )}
-                      </Link>
-                    ) : null
-                  )}
+                {(() => {
+                  const toolIcons: Record<string, typeof Sparkles> = {
+                    'Super Card Genius': Sparkles,
+                    'Category Card Genius': LayoutGrid,
+                    'Beat My Card': TrendingUp,
+                  };
+                  const toolColors: Record<string, { bg: string; icon: string; text: string }> = {
+                    'Super Card Genius': { bg: 'bg-pink-50', icon: 'text-[#FF1E7E]', text: 'text-[#0A0A0F]' },
+                    'Category Card Genius': { bg: 'bg-orange-50', icon: 'text-orange-600', text: 'text-[#0A0A0F]' },
+                    'Beat My Card': { bg: 'bg-emerald-50', icon: 'text-emerald-700', text: 'text-[#0A0A0F]' },
+                  };
+                  return sections
+                    .find((s) => s.title === "Tools")
+                    ?.items.map((tool) => {
+                      if (!tool.to) return null;
+                      const Icon = toolIcons[tool.label] || Sparkles;
+                      const colors = toolColors[tool.label] || { bg: 'bg-slate-50', icon: 'text-slate-700', text: 'text-[#0A0A0F]' };
+                      return (
+                        <Link
+                          key={tool.to}
+                          to={tool.to}
+                          className="group flex items-center gap-3 rounded-2xl border border-slate-100 bg-white px-4 py-3.5 hover:border-[#FF1E7E]/30 hover:bg-pink-50/30 transition-all"
+                          onClick={onClose}
+                        >
+                          <div className={`w-11 h-11 rounded-xl ${colors.bg} flex items-center justify-center flex-shrink-0`}>
+                            <Icon className={`w-5 h-5 ${colors.icon}`} strokeWidth={2.2} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className={`font-display font-bold text-sm ${colors.text}`}>
+                              {tool.label}
+                            </div>
+                            {tool.description && (
+                              <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">
+                                {tool.description}
+                              </p>
+                            )}
+                          </div>
+                          <ArrowUpRight className="w-4 h-4 text-slate-300 group-hover:text-[#FF1E7E] group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all flex-shrink-0" />
+                        </Link>
+                      );
+                    });
+                })()}
               </div>
             </div>
 
             {/* Blogs */}
             <Link
               to="/blogs"
-              className="block rounded-2xl border-2 border-slate-200 dark:border-slate-700 px-5 py-4 text-lg font-bold text-slate-900 dark:text-slate-100 hover:border-[#004E92] hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
+              className="group flex items-center gap-3 rounded-2xl border border-slate-100 bg-white px-4 py-3.5 hover:border-[#FF1E7E]/30 hover:bg-pink-50/30 transition-all mb-6"
               onClick={onClose}
             >
-              Blogs
+              <div className="w-11 h-11 rounded-xl bg-amber-50 flex items-center justify-center flex-shrink-0">
+                <BookOpen className="w-5 h-5 text-amber-700" strokeWidth={2.2} />
+              </div>
+              <div className="flex-1">
+                <div className="font-display font-bold text-sm text-[#0A0A0F]">Blogs</div>
+                <p className="text-xs text-slate-500 mt-0.5">Expert tips & guides</p>
+              </div>
+              <ArrowUpRight className="w-4 h-4 text-slate-300 group-hover:text-[#FF1E7E] group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all flex-shrink-0" />
             </Link>
 
-            {/* Socials Section */}
-            <div className="space-y-3 pt-2">
-              <p className="text-xs font-bold uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400 px-1">
-                Socials
-              </p>
-              <div className="space-y-2">
+            {/* Socials */}
+            <div>
+              <div className="flex items-center gap-2 mb-3 px-1">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#FF1E7E]" />
+                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
+                  Follow Us
+                </p>
+              </div>
+              <div className="grid grid-cols-3 gap-2">
                 {[
-                  { label: "YouTube", href: "https://www.youtube.com/@lazypayofficial" },
-                  { label: "Instagram", href: "https://www.instagram.com/lazypay_official/" },
-                  { label: "Facebook", href: "https://www.facebook.com/lazypayofficial/" },
+                  { label: "YouTube", href: "https://www.youtube.com/@lazypayofficial", Icon: Youtube, color: "text-red-600", bg: "bg-red-50" },
+                  { label: "Instagram", href: "https://www.instagram.com/lazypay_official/", Icon: Instagram, color: "text-pink-600", bg: "bg-pink-50" },
+                  { label: "Facebook", href: "https://www.facebook.com/lazypayofficial/", Icon: Facebook, color: "text-blue-600", bg: "bg-blue-50" },
                 ].map((s) => (
                   <a
                     key={s.label}
                     href={s.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block rounded-2xl border-2 border-slate-200 dark:border-slate-700 px-5 py-4 font-bold text-slate-900 dark:text-slate-100 hover:border-[#004E92] hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
+                    className={`flex flex-col items-center justify-center gap-1.5 rounded-2xl ${s.bg} py-4 transition-all hover:scale-[1.03] active:scale-[0.97]`}
                     onClick={onClose}
                   >
-                    {s.label}
+                    <s.Icon className={`w-5 h-5 ${s.color}`} strokeWidth={2.2} />
+                    <span className="text-[11px] font-semibold text-slate-700">{s.label}</span>
                   </a>
                 ))}
               </div>
             </div>
           </div>
 
-          <div className="px-6 py-4 border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
-            <p className="text-center text-xs text-slate-500 dark:text-slate-400 font-medium">
-              Tap outside or press Esc to close
-            </p>
+          {/* Footer CTA */}
+          <div className="px-5 py-4 border-t border-slate-100 bg-white">
+            <Link
+              to="/card-genius"
+              onClick={onClose}
+              className="lp-btn-primary w-full inline-flex items-center justify-center gap-2 text-sm"
+            >
+              Get Started
+              <ArrowUpRight className="w-4 h-4" />
+            </Link>
           </div>
         </div>
       </div>

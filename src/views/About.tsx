@@ -30,7 +30,7 @@ function StatCard({ target, format, label }: { target: number; format: (v: numbe
   const count = useCountUp(target);
   return (
     <div className="bg-[#F5F5F5] rounded-2xl px-6 py-8 text-center border border-[#E0E0E0]">
-      <p className="text-4xl font-extrabold text-[#004E92] leading-none">{format(count)}</p>
+      <p className="text-4xl font-extrabold text-[#FF1E7E] leading-none">{format(count)}</p>
       <p className="mt-2 text-sm font-medium text-gray-500">{label}</p>
     </div>
   );
@@ -56,13 +56,13 @@ const About = () => {
       {/* ── HERO ── */}
       <section className="pt-28 pb-16 bg-white">
         <div className="container max-w-2xl mx-auto px-4 text-center">
-          <div className="w-28 h-28 rounded-full bg-[#004E92] flex items-center justify-center mx-auto mb-6 text-white text-4xl font-extrabold select-none">
+          <div className="w-28 h-28 rounded-full bg-[#FF1E7E] flex items-center justify-center mx-auto mb-6 text-white text-4xl font-extrabold select-none">
             SD
           </div>
-          <h1 className="text-3xl md:text-4xl font-extrabold text-[#004E92] mb-2">Shubham Dubey</h1>
+          <h1 className="text-3xl md:text-4xl font-extrabold text-[#FF1E7E] mb-2">Shubham Dubey</h1>
           <p className="text-base font-semibold text-gray-500 mb-5">Credit Card &amp; Finance Expert</p>
           <p className="text-gray-700 leading-relaxed">
-            I run <span className="font-semibold text-[#004E92]">Bank Expert</span> — a YouTube channel dedicated to helping Indians get the most out of their credit cards. Over 3 years I've published 344 videos covering everything from first-time card selection to advanced rewards stacking. My goal is simple: cut through the noise and give you honest, actionable advice you can use today.
+            I run <span className="font-semibold text-[#FF1E7E]">Bank Expert</span> — a YouTube channel dedicated to helping Indians get the most out of their credit cards. Over 3 years I've published 344 videos covering everything from first-time card selection to advanced rewards stacking. My goal is simple: cut through the noise and give you honest, actionable advice you can use today.
           </p>
         </div>
       </section>
@@ -82,7 +82,7 @@ const About = () => {
       {/* ── WHY BANK EXPERT ── */}
       <section className="py-14 bg-white">
         <div className="container max-w-2xl mx-auto px-4">
-          <h2 className="text-2xl md:text-3xl font-extrabold text-[#004E92] mb-6">Why Bank Expert?</h2>
+          <h2 className="text-2xl md:text-3xl font-extrabold text-[#FF1E7E] mb-6">Why Bank Expert?</h2>
           <div className="space-y-5 text-gray-700 leading-relaxed">
             <p>
               Most credit card content in India falls into one of two traps: it's either too basic ("here are the top 5 cards!") or quietly sponsored by the banks being reviewed. Neither actually helps you make a better financial decision.
@@ -103,14 +103,14 @@ const About = () => {
       {/* ── WHAT I COVER ── */}
       <section className="py-14 bg-[#F9FAFB]">
         <div className="container max-w-3xl mx-auto px-4">
-          <h2 className="text-2xl md:text-3xl font-extrabold text-[#004E92] mb-8 text-center">What I Cover</h2>
+          <h2 className="text-2xl md:text-3xl font-extrabold text-[#FF1E7E] mb-8 text-center">What I Cover</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {TOPICS.map(({ icon: Icon, label }) => (
               <div
                 key={label}
                 className="flex items-center gap-3 bg-white border border-[#E0E0E0] rounded-xl px-4 py-4"
               >
-                <Icon className="w-5 h-5 text-[#004E92] flex-shrink-0" />
+                <Icon className="w-5 h-5 text-[#FF1E7E] flex-shrink-0" />
                 <span className="text-sm font-semibold text-gray-700">{label}</span>
               </div>
             ))}
@@ -121,7 +121,7 @@ const About = () => {
       {/* ── WHY TRUST ME ── */}
       <section className="py-14 bg-white">
         <div className="container max-w-2xl mx-auto px-4">
-          <h2 className="text-2xl md:text-3xl font-extrabold text-[#004E92] mb-6">Why Trust Me?</h2>
+          <h2 className="text-2xl md:text-3xl font-extrabold text-[#FF1E7E] mb-6">Why Trust Me?</h2>
           <div className="space-y-5 text-gray-700 leading-relaxed">
             <p>
               9.5 million views don't happen by accident. Every one of those views came from a real Indian viewer searching for answers — about which card to apply for, whether a fee waiver is possible, or how to actually redeem reward points. The fact that they stayed, watched, and came back is the only endorsement I need.
@@ -140,7 +140,7 @@ const About = () => {
       <section className="py-14 bg-[#F9FAFB]">
         <div className="container max-w-xl mx-auto px-4">
           <div className="bg-white border border-[#E0E0E0] rounded-2xl px-8 py-10 text-center">
-            <h2 className="text-2xl md:text-3xl font-extrabold text-[#004E92] mb-3">
+            <h2 className="text-2xl md:text-3xl font-extrabold text-[#FF1E7E] mb-3">
               Ready to master your credit cards?
             </h2>
             <p className="text-gray-500 mb-8 text-sm leading-relaxed">

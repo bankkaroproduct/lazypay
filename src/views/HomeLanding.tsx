@@ -1,5 +1,5 @@
 "use client";
-import { Search, Star, CreditCard, Users, TrendingUp, ArrowUpRight, Sparkles } from "lucide-react";
+import { Search, Star, CreditCard, Users, TrendingUp, ArrowUpRight, Sparkles, LayoutGrid } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Navigation from "@/components/Navigation";
@@ -381,157 +381,317 @@ const HomeLanding = () => {
       <Navigation />
 
       <main className="flex-1">
-        {/* ── Hero — Pink gradient mesh, matches LAZYPAY app pink branding ── */}
-        <section className="relative overflow-hidden lp-mesh-bg pt-24 sm:pt-32 pb-12 sm:pb-16">
+        {/* ── Hero — Editorial Asymmetric with floating card stack ── */}
+        <section className="relative overflow-hidden lp-mesh-bg pt-24 sm:pt-32 pb-16 sm:pb-24 lg:pb-28">
           {/* Grid overlay */}
-          <div className="absolute inset-0 lp-grid-bg opacity-30 pointer-events-none" />
+          <div className="absolute inset-0 lp-grid-bg opacity-100 pointer-events-none" />
 
           {/* Decorative orbs */}
           <div className="absolute -top-10 -right-10 w-72 h-72 sm:w-96 sm:h-96 rounded-full bg-gradient-to-br from-pink-400/30 to-purple-500/15 blur-3xl pointer-events-none" />
           <div className="absolute -bottom-10 -left-10 w-80 h-80 sm:w-[500px] sm:h-[500px] rounded-full bg-gradient-to-tr from-pink-500/20 to-rose-300/15 blur-3xl pointer-events-none" />
 
           <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
-            <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
-              {/* Eyebrow badge */}
-              <div className="lp-eyebrow lp-fade-up mb-5 sm:mb-8 text-[10px] sm:text-xs">
-                <span>India's #1 AI-Powered Card Advisor</span>
-              </div>
+            <div className="grid lg:grid-cols-[1.1fr_1fr] gap-12 lg:gap-8 items-center">
+              {/* LEFT — Text & search */}
+              <div className="flex flex-col items-center text-center lg:items-start lg:text-left max-w-2xl mx-auto lg:mx-0">
+                {/* Eyebrow badge */}
+                <div className="lp-eyebrow lp-fade-up mb-5 sm:mb-7 text-[10px] sm:text-xs">
+                  <span>India's #1 AI-Powered Card Advisor</span>
+                </div>
 
-              {/* Main headline */}
-              <h1 className="font-display lp-fade-up lp-fade-up-delay-1 text-[2.75rem] sm:text-6xl md:text-7xl lg:text-8xl font-bold text-[#0A0A0F] leading-[0.95] tracking-tight mb-4 sm:mb-6">
-                Pay smarter.
-                <br />
-                <span className="lp-gradient-text">Live lazier.</span>
-              </h1>
+                {/* Main headline */}
+                <h1 className="font-display lp-fade-up lp-fade-up-delay-1 text-[2.75rem] sm:text-6xl md:text-7xl lg:text-[5.5rem] xl:text-8xl font-bold text-[#0A0A0F] leading-[0.92] tracking-tight mb-5 sm:mb-7">
+                  Pay smarter.
+                  <br />
+                  <span className="lp-gradient-text">Live lazier.</span>
+                </h1>
 
-              <p className="lp-fade-up lp-fade-up-delay-2 text-base sm:text-lg md:text-xl text-slate-700 max-w-2xl mx-auto leading-relaxed mb-8 sm:mb-10">
-                Find credit cards that actually pay you back. AI-powered recommendations in under 60 seconds.
-              </p>
+                <p className="lp-fade-up lp-fade-up-delay-2 text-base sm:text-lg md:text-xl text-slate-700 max-w-xl leading-relaxed mb-8 sm:mb-10">
+                  Find credit cards that actually pay you back. AI-powered recommendations in under 60 seconds.
+                </p>
 
-              {/* Search bar - mobile optimized */}
-              <div className="lp-fade-up lp-fade-up-delay-3 w-full max-w-xl mb-6">
-                <div className="flex items-center gap-2 bg-white rounded-full shadow-xl shadow-pink-500/15 p-1.5 sm:p-2 border border-pink-100">
-                  <div className="relative flex-1 min-w-0">
-                    <Search className="absolute left-4 sm:left-5 top-1/2 -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-slate-400" />
-                    <input
-                      value={query}
-                      onChange={(e) => setQuery(e.target.value)}
-                      onKeyDown={handleKeyDown}
-                      placeholder="Search cards or banks..."
-                      className="w-full pl-11 sm:pl-14 pr-2 h-11 sm:h-12 text-sm sm:text-base text-slate-800 bg-transparent outline-none placeholder:text-slate-400"
-                    />
+                {/* Search bar */}
+                <div className="lp-fade-up lp-fade-up-delay-3 w-full max-w-xl mb-4">
+                  <div className="flex items-center gap-2 bg-white rounded-full shadow-xl shadow-pink-500/15 p-1.5 sm:p-2 border border-pink-100">
+                    <div className="relative flex-1 min-w-0">
+                      <Search className="absolute left-4 sm:left-5 top-1/2 -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-slate-400" />
+                      <input
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        placeholder="Search cards or banks..."
+                        className="w-full pl-11 sm:pl-14 pr-2 h-11 sm:h-12 text-sm sm:text-base text-slate-800 bg-transparent outline-none placeholder:text-slate-400"
+                      />
+                    </div>
+                    <button
+                      onClick={handleSearch}
+                      className="lp-btn-primary h-11 sm:h-12 px-4 sm:px-7 inline-flex items-center gap-2 text-sm sm:text-base flex-shrink-0"
+                    >
+                      Search
+                    </button>
                   </div>
-                  <button
-                    onClick={handleSearch}
-                    className="lp-btn-primary h-11 sm:h-12 px-4 sm:px-7 inline-flex items-center gap-2 text-sm sm:text-base flex-shrink-0"
+                </div>
+
+                {/* Explore All Cards CTA */}
+                <div className="lp-fade-up lp-fade-up-delay-3 w-full max-w-xl mb-6">
+                  <Link
+                    to="/cards"
+                    className="group inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3 rounded-full bg-white border-2 border-[#FF1E7E]/30 text-[#FF1E7E] font-semibold text-sm sm:text-base hover:bg-pink-50 hover:border-[#FF1E7E] transition-all"
                   >
-                    Search
-                  </button>
+                    Explore all 130+ cards
+                    <ArrowUpRight className="w-4 h-4 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform" />
+                  </Link>
+                </div>
+
+                {/* Trust line */}
+                <div className="lp-fade-up lp-fade-up-delay-4 flex flex-wrap items-center justify-center lg:justify-start gap-x-4 sm:gap-x-5 gap-y-2 text-xs sm:text-sm text-slate-600">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
+                    <span>130+ cards</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-1.5 h-1.5 rounded-full bg-pink-500" />
+                    <span>Bank-grade security</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-1.5 h-1.5 rounded-full bg-purple-500" />
+                    <span>100% free</span>
+                  </div>
                 </div>
               </div>
 
-              {/* Trust line */}
-              <div className="lp-fade-up lp-fade-up-delay-4 flex flex-wrap items-center justify-center gap-x-4 sm:gap-x-5 gap-y-2 text-xs sm:text-sm text-slate-600">
-                <div className="flex items-center gap-1.5">
-                  <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
-                  <span>130+ cards</span>
+              {/* RIGHT — Floating card stack (desktop only) */}
+              <div className="hidden lg:block relative h-[440px]">
+                <div className="lp-card-stack absolute inset-0">
+                  <div className="lp-floating-card lp-fc-1">
+                    <img src="/cards/hdfc-infinia.png" alt="HDFC Infinia" loading="eager" />
+                  </div>
+                  <div className="lp-floating-card lp-fc-2">
+                    <img src="/cards/axis-magnus.png" alt="Axis Magnus" loading="eager" />
+                  </div>
+                  <div className="lp-floating-card lp-fc-3">
+                    <img src="/cards/amex-platinum.png" alt="Amex Platinum" loading="eager" />
+                  </div>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <div className="w-1.5 h-1.5 rounded-full bg-pink-500" />
-                  <span>Bank-grade security</span>
+
+                {/* Floating reward badge */}
+                <div className="absolute top-8 right-0 bg-white rounded-2xl shadow-xl border border-pink-100 px-4 py-3 z-10 animate-bounce" style={{ animationDuration: "3s" }}>
+                  <div className="text-[10px] font-semibold uppercase tracking-wider text-pink-500">Avg. Saved</div>
+                  <div className="font-display text-2xl font-bold text-[#0A0A0F]">₹42,000<span className="text-base text-slate-400">/yr</span></div>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <div className="w-1.5 h-1.5 rounded-full bg-purple-500" />
-                  <span>100% free</span>
+
+                {/* Floating AI badge */}
+                <div className="absolute bottom-8 left-0 bg-[#0A0A0F] rounded-2xl shadow-xl px-4 py-3 z-10">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-[#FF1E7E] animate-pulse" />
+                    <div className="text-[10px] font-semibold uppercase tracking-wider text-pink-200">AI Analyzing</div>
+                  </div>
+                  <div className="font-display text-sm font-bold text-white mt-1">Matching your spend pattern...</div>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* ── Feature Tiles (LAZYPAY app-style) ── */}
-        <section className="relative bg-white pb-12 sm:pb-16">
+        {/* ── Feature Tiles — Bento Grid ── */}
+        <section className="relative bg-white pt-12 sm:pt-20 lg:pt-24 pb-12 sm:pb-16">
           <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 lg:gap-5">
-              {/* AI Genius tile - Lavender */}
+            {/* Section eyebrow */}
+            <div className="flex items-end justify-between mb-8 sm:mb-10">
+              <div>
+                <div className="lp-eyebrow mb-3">
+                  <span>Features</span>
+                </div>
+                <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-[#0A0A0F] tracking-tight leading-[1.05]">
+                  Built to make you <span className="lp-gradient-text">richer</span>
+                </h2>
+              </div>
+              <Link
+                to="/cards"
+                className="hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-slate-700 hover:text-[#FF1E7E] transition-colors group"
+              >
+                See all
+                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </Link>
+            </div>
+
+            {/* Bento grid: 1 hero + 3 smaller */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 lg:grid-rows-2 gap-3 sm:gap-4">
+              {/* AI Genius — HERO tile, spans 2x2 on desktop */}
               <Link
                 to="/card-genius"
-                className="group relative rounded-3xl p-5 sm:p-6 lg:p-7 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-                style={{ background: "linear-gradient(135deg, #EFE9FB 0%, #E4DBF5 100%)" }}
+                className="group col-span-2 lg:col-span-2 lg:row-span-2 relative rounded-3xl p-6 sm:p-8 lg:p-10 overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl hover:shadow-purple-500/10 min-h-[200px] lg:min-h-[420px] flex flex-col justify-between"
+                style={{ background: "linear-gradient(135deg, #EFE9FB 0%, #D7C8F0 100%)" }}
               >
+                {/* Decorative sparkle constellation */}
+                <div className="absolute top-6 right-6 opacity-50 pointer-events-none">
+                  <Sparkles className="w-4 h-4 text-purple-700 absolute top-0 right-0" />
+                  <Sparkles className="w-6 h-6 text-purple-700 absolute top-8 right-12" />
+                  <Sparkles className="w-3 h-3 text-purple-700 absolute top-16 right-4" />
+                </div>
+
+                {/* Big AI label */}
                 <div className="relative z-10">
-                  <div className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-white/60 backdrop-blur mb-3 sm:mb-4">
-                    <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-purple-700" strokeWidth={2.2} />
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/60 backdrop-blur mb-4 sm:mb-6">
+                    <div className="w-1.5 h-1.5 rounded-full bg-purple-700 animate-pulse" />
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-purple-900">AI-Powered</span>
                   </div>
-                  <h3 className="font-display font-bold text-base sm:text-lg lg:text-xl text-purple-900 mb-1 sm:mb-2 leading-tight">
-                    AI Genius
+                  <h3 className="font-display font-bold text-3xl sm:text-4xl lg:text-5xl text-purple-950 leading-[0.95] mb-3 sm:mb-4">
+                    Card<br />Genius
                   </h3>
-                  <p className="text-xs sm:text-sm text-purple-700/80 leading-snug">
-                    Smart recommendations
+                  <p className="text-sm sm:text-base text-purple-800/85 leading-relaxed max-w-xs">
+                    Tell us how you spend. Our AI analyzes 130+ cards to find your perfect match in 60 seconds.
                   </p>
                 </div>
-                <div className="absolute -bottom-4 -right-4 w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white/30 rotate-12 group-hover:rotate-6 transition-transform" />
+
+                {/* Bottom: CTA + decorative icon */}
+                <div className="relative z-10 flex items-end justify-between mt-6">
+                  <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-purple-900 group-hover:gap-2.5 transition-all">
+                    Try it free
+                    <ArrowUpRight className="w-4 h-4" />
+                  </span>
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-purple-600 to-purple-800 flex items-center justify-center shadow-xl shadow-purple-500/30 rotate-6 group-hover:rotate-12 transition-transform duration-500">
+                    <Sparkles className="w-8 h-8 sm:w-10 sm:h-10 text-white" strokeWidth={2} />
+                  </div>
+                </div>
               </Link>
 
               {/* Discover Cards - Pink */}
               <Link
                 to="/cards"
-                className="group relative rounded-3xl p-5 sm:p-6 lg:p-7 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-                style={{ background: "linear-gradient(135deg, #FFE4EF 0%, #FFD0E0 100%)" }}
+                className="group relative rounded-3xl p-5 sm:p-6 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl min-h-[160px] lg:min-h-[200px] flex flex-col justify-between"
+                style={{ background: "linear-gradient(135deg, #FFE4EF 0%, #FFC4DB 100%)" }}
               >
                 <div className="relative z-10">
-                  <div className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-white/60 backdrop-blur mb-3 sm:mb-4">
+                  <div className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-white/70 backdrop-blur mb-3 sm:mb-4">
                     <CreditCard className="w-5 h-5 sm:w-6 sm:h-6 text-[#FF1E7E]" strokeWidth={2.2} />
                   </div>
-                  <h3 className="font-display font-bold text-base sm:text-lg lg:text-xl text-pink-900 mb-1 sm:mb-2 leading-tight">
+                  <h3 className="font-display font-bold text-lg sm:text-xl text-pink-900 leading-tight">
                     Discover
                   </h3>
-                  <p className="text-xs sm:text-sm text-pink-800/80 leading-snug">
-                    Browse 130+ cards
-                  </p>
                 </div>
-                <div className="absolute -bottom-4 -right-4 w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white/30 rotate-12 group-hover:rotate-6 transition-transform" />
+                <p className="relative z-10 text-xs sm:text-sm text-pink-800/80 leading-snug">
+                  Browse 130+ cards
+                </p>
               </Link>
 
               {/* Beat My Card - Mint */}
               <Link
                 to="/beat-my-card"
-                className="group relative rounded-3xl p-5 sm:p-6 lg:p-7 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-                style={{ background: "linear-gradient(135deg, #E0F4EC 0%, #C8EBDA 100%)" }}
+                className="group relative rounded-3xl p-5 sm:p-6 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl min-h-[160px] lg:min-h-[200px] flex flex-col justify-between"
+                style={{ background: "linear-gradient(135deg, #E0F4EC 0%, #BCE5D2 100%)" }}
               >
                 <div className="relative z-10">
-                  <div className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-white/60 backdrop-blur mb-3 sm:mb-4">
+                  <div className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-white/70 backdrop-blur mb-3 sm:mb-4">
                     <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-700" strokeWidth={2.2} />
                   </div>
-                  <h3 className="font-display font-bold text-base sm:text-lg lg:text-xl text-emerald-900 mb-1 sm:mb-2 leading-tight">
+                  <h3 className="font-display font-bold text-lg sm:text-xl text-emerald-900 leading-tight">
                     Beat My Card
                   </h3>
-                  <p className="text-xs sm:text-sm text-emerald-800/80 leading-snug">
-                    Upgrade smarter
-                  </p>
                 </div>
-                <div className="absolute -bottom-4 -right-4 w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white/30 rotate-12 group-hover:rotate-6 transition-transform" />
+                <p className="relative z-10 text-xs sm:text-sm text-emerald-800/80 leading-snug">
+                  Upgrade smarter
+                </p>
               </Link>
 
               {/* Category - Peach */}
               <Link
                 to="/card-genius-category"
-                className="group relative rounded-3xl p-5 sm:p-6 lg:p-7 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-                style={{ background: "linear-gradient(135deg, #FFEFD9 0%, #FFE0B8 100%)" }}
+                className="group relative rounded-3xl p-5 sm:p-6 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl min-h-[160px] lg:min-h-[200px] flex flex-col justify-between"
+                style={{ background: "linear-gradient(135deg, #FFEFD9 0%, #FFDA9A 100%)" }}
               >
                 <div className="relative z-10">
-                  <div className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-white/60 backdrop-blur mb-3 sm:mb-4">
-                    <Star className="w-5 h-5 sm:w-6 sm:h-6 text-orange-700" strokeWidth={2.2} />
+                  <div className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-white/70 backdrop-blur mb-3 sm:mb-4">
+                    <LayoutGrid className="w-5 h-5 sm:w-6 sm:h-6 text-orange-700" strokeWidth={2.2} />
                   </div>
-                  <h3 className="font-display font-bold text-base sm:text-lg lg:text-xl text-orange-900 mb-1 sm:mb-2 leading-tight">
-                    Categories
+                  <h3 className="font-display font-bold text-lg sm:text-xl text-orange-900 leading-tight">
+                    By Category
                   </h3>
-                  <p className="text-xs sm:text-sm text-orange-800/80 leading-snug">
-                    By spend type
+                </div>
+                <p className="relative z-10 text-xs sm:text-sm text-orange-800/80 leading-snug">
+                  Find best per spend
+                </p>
+              </Link>
+
+              {/* Stats mini-tile - Dark accent (4th smaller tile) */}
+              <Link
+                to="/blogs"
+                className="group relative rounded-3xl p-5 sm:p-6 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl min-h-[160px] lg:min-h-[200px] flex flex-col justify-between bg-[#0A0A0F]"
+              >
+                <div className="absolute inset-0 lp-dark-bg opacity-60" />
+                <div className="relative z-10">
+                  <div className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-pink-500/20 backdrop-blur mb-3 sm:mb-4">
+                    <Star className="w-5 h-5 sm:w-6 sm:h-6 text-[#FF1E7E]" strokeWidth={2.2} />
+                  </div>
+                  <h3 className="font-display font-bold text-lg sm:text-xl text-white leading-tight">
+                    Card Guides
+                  </h3>
+                </div>
+                <p className="relative z-10 text-xs sm:text-sm text-slate-400 leading-snug">
+                  Expert insights & tips
+                </p>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* ── How it works ── */}
+        <section className="relative bg-gradient-to-b from-white via-pink-50/30 to-white py-16 sm:py-24">
+          <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+            <div className="text-center mb-12 sm:mb-16">
+              <div className="lp-eyebrow mb-4">
+                <span>How it works</span>
+              </div>
+              <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-[#0A0A0F] tracking-tight leading-[1.05]">
+                Your perfect card in <span className="lp-gradient-text">three steps</span>
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 lg:gap-12 relative">
+              {/* Pink connecting line on desktop */}
+              <div className="hidden md:block absolute top-12 left-[16.67%] right-[16.67%] h-0.5 bg-gradient-to-r from-transparent via-pink-300 to-transparent pointer-events-none" />
+
+              {[
+                { num: "01", title: "Share how you spend", body: "Quick 60-second quiz on your monthly spend across categories. No login. No KYC.", icon: TrendingUp },
+                { num: "02", title: "AI analyzes 130+ cards", body: "Our engine cross-references rewards, fees, joining bonuses, and your habits.", icon: Sparkles },
+                { num: "03", title: "Get your match", body: "Personalized recommendations with savings forecast. Apply directly through us.", icon: CreditCard },
+              ].map((step) => (
+                <div key={step.num} className="relative flex flex-col items-center text-center bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm">
+                  <div className="lp-step-number mb-2">{step.num}</div>
+                  <div className="w-12 h-12 rounded-2xl bg-pink-50 flex items-center justify-center mb-4 -mt-2">
+                    <step.icon className="w-6 h-6 text-[#FF1E7E]" strokeWidth={2.2} />
+                  </div>
+                  <h3 className="font-display text-xl sm:text-2xl font-bold text-[#0A0A0F] mb-2 leading-tight">
+                    {step.title}
+                  </h3>
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    {step.body}
                   </p>
                 </div>
-                <div className="absolute -bottom-4 -right-4 w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white/30 rotate-12 group-hover:rotate-6 transition-transform" />
-              </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Bank Marquee — Trust strip ── */}
+        <section className="relative bg-white py-10 sm:py-14 overflow-hidden border-y border-slate-100">
+          <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 mb-6 text-center">
+            <p className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.18em] text-slate-400">
+              Trusted by India's leading banks
+            </p>
+          </div>
+          <div className="lp-marquee-mask overflow-hidden">
+            <div className="lp-marquee-track">
+              {[
+                "HDFC Bank", "Axis Bank", "ICICI Bank", "SBI Card", "American Express",
+                "Standard Chartered", "Kotak", "IDFC First", "RBL Bank", "Yes Bank",
+                "HDFC Bank", "Axis Bank", "ICICI Bank", "SBI Card", "American Express",
+                "Standard Chartered", "Kotak", "IDFC First", "RBL Bank", "Yes Bank",
+              ].map((bank, i) => (
+                <div key={i} className="flex-shrink-0 font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-300 hover:text-[#FF1E7E] transition-colors whitespace-nowrap">
+                  {bank}
+                </div>
+              ))}
             </div>
           </div>
         </section>
