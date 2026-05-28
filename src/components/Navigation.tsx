@@ -320,30 +320,32 @@ const Navigation = () => {
   ]), [navLinks, toolLinks]);
 
   return <nav
-    className="fixed top-0 left-0 right-0 z-50 backdrop-blur-lg  border-slate-700 overflow-visible will-change-transform"
+    className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl overflow-visible will-change-transform border-b border-black/5"
     style={{
       ...style,
       '--nav-height': navHeight,
-      backgroundColor: brandConfig.headerBgColor,
+      backgroundColor: 'rgba(255, 255, 255, 0.85)',
     } as React.CSSProperties}
   >
-    <div className="container mx-auto px-4 py-1.5 lg:py-2 overflow-visible">
+    <div className="container mx-auto px-6 py-3 lg:py-4 overflow-visible">
       <div className="flex items-center justify-between gap-4">
-        <Link to="/" className="flex items-center gap-2.5">
-          <div className="h-9 w-9 rounded-full bg-white flex items-center justify-center flex-shrink-0 shadow-sm overflow-hidden">
-            <img src={brandConfig.logo} alt={brandConfig.name} className="h-8 w-8 rounded-full object-contain" />
+        <Link to="/" className="flex items-center gap-2.5 group">
+          <div className="flex items-center gap-1">
+            <div className="lp-logo-mark" />
+            <span className="font-display text-2xl font-extrabold tracking-tight text-[#0A0A0F]">
+              LAZY<span className="text-[#FF1E7E]">PAY</span>
+            </span>
           </div>
-          <span className="text-xl font-bold hidden sm:inline text-white">{brandConfig.name}</span>
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden lg:flex items-center gap-8">
+        <div className="hidden lg:flex items-center gap-1">
           {navLinks.map(link => (
             <NavLink
               key={link.label}
               to={link.to!}
-              className="text-white/90 hover:text-white transition-colors font-medium"
-              activeClassName="text-white font-semibold underline underline-offset-4"
+              className="px-4 py-2 rounded-full text-slate-700 hover:text-[#FF1E7E] hover:bg-pink-50 transition-all font-medium text-sm"
+              activeClassName="text-[#FF1E7E] bg-pink-50 font-semibold"
               onClick={link.action}
             >
               {link.label}
@@ -352,21 +354,21 @@ const Navigation = () => {
 
           {/* Tools Dropdown */}
           <div className="relative group">
-            <button className="text-white/90 hover:text-white transition-colors font-medium flex items-center gap-1">
+            <button className="px-4 py-2 rounded-full text-slate-700 hover:text-[#FF1E7E] hover:bg-pink-50 transition-all font-medium text-sm flex items-center gap-1">
               Tools
               <ChevronDown className="w-4 h-4" />
             </button>
 
-            <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200 absolute top-full right-0 mt-2 w-72 bg-background border border-border rounded-2xl shadow-xl py-2 z-[100]">
+            <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200 absolute top-full right-0 mt-2 w-80 bg-white border border-black/5 rounded-2xl shadow-2xl py-2 z-[100]">
               {toolLinks.map(tool => (
                 <Link
                   key={tool.to}
                   to={tool.to!}
-                  className="block px-4 py-2.5 text-foreground hover:bg-accent transition-colors"
+                  className="block px-5 py-3 hover:bg-pink-50 transition-colors group/item"
                   onClick={tool.action}
                 >
-                  <div className="font-medium">{tool.label}</div>
-                  <div className="text-xs text-muted-foreground">{tool.description}</div>
+                  <div className="font-semibold text-slate-900 group-hover/item:text-[#FF1E7E] transition-colors">{tool.label}</div>
+                  <div className="text-xs text-slate-500 mt-0.5">{tool.description}</div>
                 </Link>
               ))}
             </div>
@@ -374,45 +376,33 @@ const Navigation = () => {
 
           <NavLink
             to="/blogs"
-            className="text-white/90 hover:text-white transition-colors font-medium"
-            activeClassName="text-white font-semibold underline underline-offset-4"
+            className="px-4 py-2 rounded-full text-slate-700 hover:text-[#FF1E7E] hover:bg-pink-50 transition-all font-medium text-sm"
+            activeClassName="text-[#FF1E7E] bg-pink-50 font-semibold"
           >
             Blogs
           </NavLink>
+        </div>
 
-          {/* Socials Dropdown */}
-          <div className="relative group">
-            <button className="text-white/90 hover:text-white transition-colors font-medium flex items-center gap-1">
-              Socials
-              <ChevronDown className="w-4 h-4" />
-            </button>
-            <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200 absolute top-full right-0 mt-2 w-44 bg-background border border-border rounded-2xl shadow-xl py-2 z-[100]">
-              <a href="https://www.youtube.com/@lazypayofficial" target="_blank" rel="noopener noreferrer" className="block px-4 py-2.5 text-foreground hover:bg-accent transition-colors font-medium text-sm">
-                YouTube
-              </a>
-              <a href="https://www.instagram.com/bank.experts/" target="_blank" rel="noopener noreferrer" className="block px-4 py-2.5 text-foreground hover:bg-accent transition-colors font-medium text-sm">
-                Instagram
-              </a>
-              <a href="https://www.facebook.com/people/Bank-Expert/61556117044087/#" target="_blank" rel="noopener noreferrer" className="block px-4 py-2.5 text-foreground hover:bg-accent transition-colors font-medium text-sm">
-                Facebook
-              </a>
-            </div>
-          </div>
-
+        {/* CTA Button - Desktop */}
+        <div className="hidden lg:flex items-center gap-3">
+          <Link to="/card-genius" className="lp-btn-primary inline-flex items-center gap-2 text-sm">
+            Get Started
+            <ChevronDown className="w-4 h-4 -rotate-90" />
+          </Link>
         </div>
 
         {/* Mobile Actions */}
         <div className="flex items-center gap-2 lg:hidden">
           <button
             ref={menuTriggerRef}
-            className="p-3 rounded-xl bg-white/20 hover:bg-white/30 active:bg-white/10 border border-white/30 transition-all touch-target"
+            className="p-2.5 rounded-xl bg-pink-50 hover:bg-pink-100 active:bg-pink-100 border border-pink-200 transition-all touch-target"
             onClick={() => setIsMobileMenuOpen(true)}
             aria-label="Open navigation menu"
           >
-            <div className="relative w-6 h-6 flex flex-col items-center justify-center gap-1.5">
-              <span className="block w-6 h-0.5 bg-white rounded-full"></span>
-              <span className="block w-6 h-0.5 bg-white rounded-full"></span>
-              <span className="block w-6 h-0.5 bg-white rounded-full"></span>
+            <div className="relative w-5 h-5 flex flex-col items-center justify-center gap-1">
+              <span className="block w-5 h-0.5 bg-[#FF1E7E] rounded-full"></span>
+              <span className="block w-5 h-0.5 bg-[#FF1E7E] rounded-full"></span>
+              <span className="block w-5 h-0.5 bg-[#FF1E7E] rounded-full"></span>
             </div>
           </button>
         </div>

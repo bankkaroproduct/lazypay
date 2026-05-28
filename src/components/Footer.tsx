@@ -1,7 +1,7 @@
 "use client";
 import { Link } from "@/components/Link";
 import { useMemo, useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ArrowUpRight, Mail, Sparkles } from "lucide-react";
 import { brandConfig } from "@/config/brand.config";
 import { analytics } from "@/services/analytics";
 
@@ -10,95 +10,162 @@ const Footer = () => {
 
   const sections = useMemo(() => ([
     {
-      id: "about",
-      title: brandConfig.name,
-      content: (
-        <div className="space-y-4">
-          <div>
-            <div className="text-sm opacity-80 leading-relaxed mb-4">
-              Helping users make smarter credit card decisions with personalized recommendations, detailed comparisons, and expert insights.
-            </div>
-            <div className="flex items-center gap-2 opacity-60 hover:opacity-100 transition-opacity">
-              <span className="text-[10px] uppercase tracking-wider font-medium">LAZYPAY</span>
-            </div>
-          </div>
-        </div>
-      )
+      id: "product",
+      title: "Product",
+      links: [
+        { label: "Discover Cards", to: "/cards" },
+        { label: "AI Card Genius", to: "/card-genius" },
+        { label: "Category Genius", to: "/card-genius-category" },
+        { label: "Beat My Card", to: "/beat-my-card" },
+      ]
     },
     {
-      id: "links",
-      title: "Quick Links",
-      content: (
-        <ul className="space-y-3 text-sm opacity-80">
-          <li><Link to="/" className="hover:opacity-100 transition-opacity" onClick={() => analytics.trackFooterClick('Home')}>Home</Link></li>
-          <li><Link to="/cards" className="hover:opacity-100 transition-opacity" onClick={() => analytics.trackFooterClick('Discover Cards')}>Discover Cards</Link></li>
-          <li><Link to="/card-genius" className="hover:opacity-100 transition-opacity" onClick={() => analytics.trackFooterClick('AI Card Genius')}>AI Card Genius</Link></li>
-          <li><Link to="/card-genius-category" className="hover:opacity-100 transition-opacity" onClick={() => analytics.trackFooterClick('AI Category Card Genius')}>AI Category Card Genius</Link></li>
-          <li><Link to="/beat-my-card" className="hover:opacity-100 transition-opacity" onClick={() => analytics.trackFooterClick('Beat My Card')}>Beat My Card</Link></li>
-          <li><Link to="/blogs" className="hover:opacity-100 transition-opacity" onClick={() => analytics.trackFooterClick('Blogs')}>Blogs</Link></li>
-        </ul>
-      )
+      id: "company",
+      title: "Company",
+      links: [
+        { label: "About", to: "/about" },
+        { label: "Blogs", to: "/blogs" },
+        { label: "Contact", to: `mailto:${brandConfig.email}`, external: true },
+      ]
     },
     {
-      id: "contact",
-      title: "Get In Touch",
-      content: (
-        <div className="space-y-3 text-sm opacity-80">
-          <p>Have questions? We're here to help!</p>
-          <p>  <a href={`mailto:${brandConfig.email}`} className="hover:opacity-100 transition-opacity">{brandConfig.email}</a></p>
-          <p>Available 24/7 to assist you with your credit card queries.</p>
-        </div>
-      )
+      id: "legal",
+      title: "Legal",
+      links: [
+        { label: "Privacy Policy", to: "https://lazypay.com/privacy-policy", external: true },
+        { label: "Terms of Service", to: "https://lazypay.com/terms-conditions", external: true },
+      ]
     }
   ]), []);
 
   return (
-    <footer className="text-white pt-12 sm:pt-14 md:pt-16 pb-8 sm:pb-10 safe-area-inset-bottom" style={{ backgroundColor: "#004E92" }}>
-      <div className="section-shell">
-        {/* Desktop: 3-column grid */}
-        <div className="hidden md:grid md:grid-cols-3 gap-10 lg:gap-12 mb-10 lg:mb-12">
-          {sections.map(section => (
-            <div key={section.id}>
-              <h3 className="font-bold text-lg lg:text-xl mb-5 lg:mb-6">{section.title}</h3>
-              {section.content}
-            </div>
-          ))}
-        </div>
+    <footer className="relative overflow-hidden text-white">
+      {/* Background */}
+      <div className="absolute inset-0 bg-[#0A0A0F]" />
+      <div className="absolute inset-0 lp-dark-bg opacity-80" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#FF1E7E]/50 to-transparent" />
 
-        {/* Mobile: Accordion sections */}
-        <div className="md:hidden space-y-3 mb-8">
-          {sections.map(section => {
-            const isOpen = openSection === section.id;
-            return (
-              <div key={section.id} className="border border-background/20 rounded-xl bg-background/5 overflow-hidden">
-                <button
-                  className="w-full flex items-center justify-between px-4 py-3.5 touch-target"
-                  onClick={() => setOpenSection(isOpen ? null : section.id)}
-                  aria-expanded={isOpen}
-                  aria-controls={`footer-section-${section.id}`}
-                >
-                  <span className="font-semibold text-sm sm:text-base">{section.title}</span>
-                  <ChevronDown className={`w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
-                </button>
-                {isOpen && (
-                  <div id={`footer-section-${section.id}`} className="px-4 pb-4 animate-accordion-down">
-                    {section.content}
-                  </div>
-                )}
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 pt-20 sm:pt-24 pb-10">
+        {/* Top CTA section */}
+        <div className="mb-16 pb-16 border-b border-white/10">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+            <div className="max-w-2xl">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-500/10 border border-pink-500/20 mb-4">
+                <Sparkles className="w-3.5 h-3.5 text-[#FF1E7E]" />
+                <span className="text-xs font-semibold text-[#FF1E7E] uppercase tracking-wider">Ready to start?</span>
               </div>
-            );
-          })}
+              <h2 className="font-display text-4xl md:text-5xl font-bold tracking-tight mb-3">
+                Find your <span className="lp-gradient-text">perfect card</span>
+              </h2>
+              <p className="text-slate-400 text-lg">
+                Personalized recommendations in 60 seconds. No spam, no commitment.
+              </p>
+            </div>
+            <Link to="/card-genius" className="lp-btn-primary inline-flex items-center gap-2 whitespace-nowrap">
+              Get Started
+              <ArrowUpRight className="w-5 h-5" />
+            </Link>
+          </div>
         </div>
 
-        {/* Copyright & Legal Links */}
-        <div className="border-t border-background/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
-          <p className="text-xs opacity-60 text-center sm:text-left">
-            © {new Date().getFullYear()} Pouring Pounds India Pvt. Ltd. All rights reserved.
+        {/* Footer grid */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 mb-12">
+          {/* Brand column */}
+          <div className="md:col-span-5">
+            <Link to="/" className="inline-flex items-center gap-2 mb-6">
+              <div className="lp-logo-mark" />
+              <span className="font-display text-2xl font-extrabold tracking-tight">
+                LAZY<span className="text-[#FF1E7E]">PAY</span>
+              </span>
+            </Link>
+            <p className="text-slate-400 text-sm leading-relaxed max-w-sm mb-6">
+              Smart payment solutions for everyone. Discover credit cards that actually pay you back with AI-powered recommendations.
+            </p>
+            <a
+              href={`mailto:${brandConfig.email}`}
+              className="inline-flex items-center gap-2 text-sm text-slate-300 hover:text-[#FF1E7E] transition-colors group"
+            >
+              <Mail className="w-4 h-4" />
+              <span className="border-b border-transparent group-hover:border-[#FF1E7E]">{brandConfig.email}</span>
+            </a>
+          </div>
+
+          {/* Links columns - desktop */}
+          <div className="hidden md:grid md:col-span-7 grid-cols-3 gap-8">
+            {sections.map(section => (
+              <div key={section.id}>
+                <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-slate-500 mb-5">{section.title}</h3>
+                <ul className="space-y-3">
+                  {section.links.map(link => (
+                    <li key={link.label}>
+                      {link.external ? (
+                        <a
+                          href={link.to}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-slate-300 hover:text-white transition-colors text-sm inline-flex items-center gap-1 group"
+                          onClick={() => analytics.trackFooterClick(link.label)}
+                        >
+                          {link.label}
+                          <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </a>
+                      ) : (
+                        <Link
+                          to={link.to}
+                          className="text-slate-300 hover:text-white transition-colors text-sm"
+                          onClick={() => analytics.trackFooterClick(link.label)}
+                        >
+                          {link.label}
+                        </Link>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+
+          {/* Mobile accordion */}
+          <div className="md:hidden space-y-2">
+            {sections.map(section => {
+              const isOpen = openSection === section.id;
+              return (
+                <div key={section.id} className="border border-white/10 rounded-xl overflow-hidden">
+                  <button
+                    className="w-full flex items-center justify-between px-4 py-3.5"
+                    onClick={() => setOpenSection(isOpen ? null : section.id)}
+                  >
+                    <span className="font-semibold text-sm">{section.title}</span>
+                    <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                  {isOpen && (
+                    <ul className="px-4 pb-4 space-y-3">
+                      {section.links.map(link => (
+                        <li key={link.label}>
+                          {link.external ? (
+                            <a href={link.to} target="_blank" rel="noopener noreferrer" className="text-slate-300 text-sm">{link.label}</a>
+                          ) : (
+                            <Link to={link.to} className="text-slate-300 text-sm">{link.label}</Link>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Bottom bar */}
+        <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-slate-500">
+            © {new Date().getFullYear()} LAZYPAY. All rights reserved.
           </p>
-          <div className="flex items-center gap-4 sm:gap-5 text-xs sm:text-sm opacity-60">
-            <a href="https://lazypay.com/privacy-policy" target="_blank" className="hover:opacity-100 hover:text-white transition-all">Privacy Policy</a>
-            <span className="hidden sm:inline">•</span>
-            <a href="https://lazypay.com/terms-conditions" target="_blank" className="hover:opacity-100 hover:text-white transition-all">Terms of Service</a>
+          <div className="flex items-center gap-6 text-xs text-slate-500">
+            <a href="https://www.instagram.com/lazypay_official/" target="_blank" rel="noopener noreferrer" className="hover:text-[#FF1E7E] transition-colors">Instagram</a>
+            <a href="https://www.youtube.com/@lazypayofficial" target="_blank" rel="noopener noreferrer" className="hover:text-[#FF1E7E] transition-colors">YouTube</a>
+            <a href="https://www.facebook.com/lazypayofficial/" target="_blank" rel="noopener noreferrer" className="hover:text-[#FF1E7E] transition-colors">Facebook</a>
           </div>
         </div>
       </div>

@@ -1,5 +1,5 @@
 "use client";
-import { Search, Star, CreditCard, Users, TrendingUp } from "lucide-react";
+import { Search, Star, CreditCard, Users, TrendingUp, ArrowUpRight } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Navigation from "@/components/Navigation";
@@ -124,40 +124,43 @@ function CardTile({ card }: { card: CardItem }) {
     : [];
 
   return (
-    <div className="bg-white border border-[#E5EAF0] rounded-xl overflow-hidden flex flex-col hover:shadow-md transition-shadow duration-200">
-      {/* Image — full width, flush to top */}
-      <div className="h-44 bg-[#FFF5E6] flex items-center justify-center overflow-hidden">
+    <div className="lp-card overflow-hidden flex flex-col group">
+      {/* Image */}
+      <div className="h-48 bg-gradient-to-br from-pink-50 via-white to-pink-50 flex items-center justify-center overflow-hidden relative">
+        <div className="absolute inset-0 bg-gradient-to-tr from-pink-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         <img
           src={card.image}
           alt={card.name}
           loading="lazy"
-          className="w-full h-full object-contain scale-110"
+          className="w-full h-full object-contain scale-110 group-hover:scale-125 transition-transform duration-500 relative z-10"
           onError={(e) => { e.currentTarget.style.display = "none"; }}
         />
       </div>
 
       {/* Content */}
-      <div className="px-4 pt-3 pb-4 flex flex-col flex-1">
+      <div className="px-5 pt-4 pb-5 flex flex-col flex-1">
         {/* Network badges */}
         {networkList.length > 0 && (
-          <div className="flex flex-wrap gap-1 mb-2">
+          <div className="flex flex-wrap gap-1.5 mb-3">
             {networkList.map((n) => (
-              <span key={n} className="text-[10px] border border-gray-300 rounded-full px-2 py-0.5 text-gray-500">
+              <span key={n} className="text-[10px] font-medium border border-slate-200 rounded-full px-2.5 py-1 text-slate-500 bg-slate-50">
                 {n === "AmericanExpress" ? "Amex" : n}
               </span>
             ))}
           </div>
         )}
 
-        <h3 className="text-sm font-bold text-[#111] leading-snug line-clamp-2 mb-3">{card.name}</h3>
+        <h3 className="font-display text-base font-bold text-[#0A0A0F] leading-snug line-clamp-2 mb-4 group-hover:text-[#FF1E7E] transition-colors">
+          {card.name}
+        </h3>
 
         {/* Button */}
         <div className="mt-auto">
           <Link
             to={card.alias ? `/cards/${card.alias}` : "/cards"}
-            className="block w-full text-center text-xs font-semibold py-2.5 rounded-lg border border-[#004E92] text-[#004E92] hover:bg-[#EEF4FF] transition-colors"
+            className="block w-full text-center text-sm font-semibold py-3 rounded-full bg-slate-50 text-slate-700 hover:bg-[#FF1E7E] hover:text-white transition-all"
           >
-            Details
+            View Details →
           </Link>
         </div>
       </div>
@@ -289,28 +292,32 @@ function ShubhamPicks() {
   };
 
   return (
-    <section className="py-14 bg-[#F9FAFB]">
-      <div className="container max-w-5xl mx-auto px-4">
+    <section className="relative py-20 sm:py-28 bg-white overflow-hidden">
+      <div className="absolute inset-0 lp-grid-bg opacity-30 pointer-events-none" />
+      <div className="container relative z-10 max-w-7xl mx-auto px-6">
         {/* Section header */}
-        <div className="mb-8">
-          <p className="text-xs font-semibold tracking-[0.18em] uppercase text-gray-400 mb-1">
-            Curated by LAZYPAY
-          </p>
-          <h2 className="text-2xl md:text-3xl font-extrabold text-[#FF1E7E]">
-            Explore LAZYPAY's Picks
+        <div className="mb-12 flex flex-col items-center text-center">
+          <div className="lp-eyebrow mb-5">
+            <span>Curated Collections</span>
+          </div>
+          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-[#0A0A0F] tracking-tight mb-4">
+            Explore <span className="lp-gradient-text">LAZYPAY's Picks</span>
           </h2>
+          <p className="text-lg text-slate-600 max-w-2xl">
+            Hand-curated credit cards across categories, optimized for maximum rewards.
+          </p>
         </div>
 
         {/* Tab bar */}
-        <div className="flex gap-2 overflow-x-auto pb-1 mb-8 scrollbar-none">
+        <div className="flex gap-3 overflow-x-auto pb-1 mb-12 scrollbar-none justify-center flex-wrap">
           {(Object.keys(TAB_CONFIG) as TabKey[]).map((key) => (
             <button
               key={key}
               onClick={() => handleTabClick(key)}
-              className={`flex-shrink-0 px-5 py-2.5 rounded-full text-sm font-semibold transition-colors whitespace-nowrap ${
+              className={`flex-shrink-0 px-6 py-3 rounded-full text-sm font-semibold transition-all whitespace-nowrap ${
                 activeTab === key
-                  ? "bg-[#004E92] text-white"
-                  : "bg-white border border-[#E5EAF0] text-gray-500 hover:text-[#004E92] hover:border-[#004E92]"
+                  ? "bg-[#0A0A0F] text-white shadow-lg shadow-pink-500/20"
+                  : "bg-white border border-slate-200 text-slate-600 hover:text-[#FF1E7E] hover:border-[#FF1E7E] hover:shadow-md"
               }`}
             >
               {TAB_CONFIG[key].label}
@@ -377,84 +384,92 @@ const HomeLanding = () => {
 
       <main className="flex-1">
         {/* ── Hero ── */}
-        <section
-          className="relative overflow-hidden pt-28 pb-16 md:pt-36 md:pb-20"
-          style={{ backgroundColor: "#F5F5F5" }}
-        >
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              opacity: 0.06,
-              backgroundImage: "radial-gradient(circle, #004E92 1px, transparent 1px)",
-              backgroundSize: "28px 28px",
-            }}
-          />
+        <section className="relative overflow-hidden lp-mesh-bg pt-32 sm:pt-40 pb-20 sm:pb-28">
+          {/* Grid overlay */}
+          <div className="absolute inset-0 lp-grid-bg opacity-40 pointer-events-none" />
 
-          <div className="container relative z-10 flex flex-col items-center text-center max-w-2xl mx-auto px-4">
-            <p className="text-xs font-semibold tracking-[0.2em] uppercase mb-4" style={{ color: "#666666" }}>
-              India's Trusted Card Advisor
-            </p>
+          {/* Decorative orbs */}
+          <div className="absolute -top-20 -right-20 w-96 h-96 rounded-full bg-gradient-to-br from-pink-400/30 to-purple-500/20 blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 -left-20 w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-pink-500/20 to-rose-300/20 blur-3xl pointer-events-none" />
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] tracking-tight mb-5" style={{ color: "#004E92" }}>
-              Build Wealth Through{" "}
-              <em className="not-italic" style={{ fontStyle: "italic" }}>
-                Smarter Credit Cards
-              </em>
+          <div className="container relative z-10 flex flex-col items-center text-center max-w-5xl mx-auto px-6">
+            {/* Eyebrow */}
+            <div className="lp-eyebrow lp-fade-up mb-8">
+              <span>India's #1 AI-Powered Card Advisor</span>
+            </div>
+
+            {/* Main headline */}
+            <h1 className="font-display lp-fade-up lp-fade-up-delay-1 text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-[#0A0A0F] leading-[0.95] tracking-tight mb-6">
+              Pay smarter.
+              <br />
+              <span className="lp-gradient-text">Live lazier.</span>
             </h1>
 
-            <p className="text-base md:text-lg mb-3 max-w-lg" style={{ color: "#666666" }}>
-              Learn which cards work best for you. No bias. No spam.
-            </p>
-
-            <p className="text-sm font-medium mb-8" style={{ color: "#FF1E7E" }}>
-              ↓ Explore LAZYPAY's Picks Below
+            <p className="lp-fade-up lp-fade-up-delay-2 text-lg sm:text-xl md:text-2xl text-slate-600 max-w-2xl mx-auto leading-relaxed mb-10 font-light">
+              Find credit cards that actually pay you back. AI-powered recommendations in under 60 seconds. No bias. No spam.
             </p>
 
             {/* Search bar */}
-            <div className="w-full max-w-lg">
-              <div className="flex items-center gap-0 bg-white rounded-xl shadow-md overflow-hidden border border-gray-200">
+            <div className="lp-fade-up lp-fade-up-delay-3 w-full max-w-2xl mb-8">
+              <div className="flex items-center gap-0 bg-white rounded-full shadow-2xl shadow-pink-500/10 overflow-hidden border border-pink-100">
                 <div className="relative flex-1">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
                   <input
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    placeholder="Search by card name or bank…"
-                    className="w-full pl-11 pr-4 h-12 text-sm text-gray-800 bg-transparent outline-none placeholder:text-gray-400"
+                    placeholder="Search by card name or bank..."
+                    className="w-full pl-14 pr-4 h-16 text-base text-slate-800 bg-transparent outline-none placeholder:text-slate-400"
                   />
                 </div>
                 <button
                   onClick={handleSearch}
-                  className="h-12 px-6 text-sm font-semibold text-white flex-shrink-0 transition-colors"
-                  style={{ backgroundColor: "#004E92" }}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#003A6E")}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#004E92")}
+                  className="lp-btn-primary h-14 mr-2 px-8 inline-flex items-center gap-2"
                 >
                   Search
+                  <Search className="w-4 h-4" />
                 </button>
               </div>
+            </div>
 
-              <div className="mt-3 flex justify-center">
-                <Link
-                  to="/cards"
-                  className="inline-flex items-center gap-1.5 text-sm font-medium px-6 py-3 rounded-lg transition-colors"
-                  style={{ border: "1.5px solid #004E92", color: "#004E92", backgroundColor: "transparent" }}
-                >
-                  Explore All Cards →
-                </Link>
-              </div>
+            {/* CTA Buttons */}
+            <div className="lp-fade-up lp-fade-up-delay-4 flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Link
+                to="/card-genius"
+                className="lp-btn-primary inline-flex items-center gap-2 text-base"
+              >
+                Try AI Card Genius
+                <ArrowUpRight className="w-5 h-5" />
+              </Link>
+              <Link
+                to="/cards"
+                className="lp-btn-ghost inline-flex items-center gap-2 text-base"
+              >
+                Browse All Cards
+              </Link>
             </div>
           </div>
         </section>
 
         {/* ── Stat Strip ── */}
-        <section style={{ backgroundColor: "#004E92" }}>
-          <div className="container max-w-4xl mx-auto px-4 py-6">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-0 md:divide-x md:divide-white/20">
-              {STATS.map((s) => (
-                <div key={s.label} className="flex flex-col items-center text-center py-1">
-                  <span className="text-2xl md:text-3xl font-extrabold leading-none text-white">{s.value}</span>
-                  <span className="text-xs mt-1 font-medium tracking-wide" style={{ color: "#F5F5F5" }}>{s.label}</span>
+        <section className="relative overflow-hidden bg-[#0A0A0F] py-16">
+          <div className="absolute inset-0 lp-dark-bg opacity-60" />
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#FF1E7E]/50 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#FF1E7E]/50 to-transparent" />
+
+          <div className="container relative z-10 max-w-6xl mx-auto px-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              {STATS.map((s, i) => (
+                <div key={s.label} className="flex flex-col items-center text-center group">
+                  <span className="font-display text-4xl md:text-5xl font-bold leading-none mb-2 lp-gradient-text">
+                    {s.value}
+                  </span>
+                  <span className="text-xs md:text-sm font-medium tracking-wider uppercase text-slate-400">
+                    {s.label}
+                  </span>
+                  {i < STATS.length - 1 && (
+                    <div className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 w-px h-12 bg-white/10" />
+                  )}
                 </div>
               ))}
             </div>

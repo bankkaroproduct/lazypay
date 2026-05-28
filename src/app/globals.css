@@ -18,23 +18,23 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 10%;
     
-    /* Blue - Primary Brand */
-    --mc-green-50: 210 100% 97%;
-    --mc-green-100: 210 100% 95%;
-    --mc-green-200: 210 100% 90%;
-    --mc-green-500: 210 100% 40%;
-    --mc-green-600: 210 100% 32%;
-    --mc-green-700: 210 100% 24%;
-    --mc-green-900: 210 100% 13%;
+    /* LAZYPAY Pink - Primary Brand */
+    --mc-green-50: 330 100% 97%;
+    --mc-green-100: 330 100% 95%;
+    --mc-green-200: 330 100% 90%;
+    --mc-green-500: 330 100% 50%;
+    --mc-green-600: 330 100% 45%;
+    --mc-green-700: 330 100% 38%;
+    --mc-green-900: 330 100% 20%;
 
-    /* Primary (Blue) */
-    --primary: 210 100% 40%;
+    /* Primary (LAZYPAY Pink #FF1E7E) */
+    --primary: 330 100% 45%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 210 100% 55%;
+    --primary-glow: 330 100% 60%;
 
     /* Secondary */
-    --secondary: 210 60% 95%;
-    --secondary-foreground: 210 100% 24%;
+    --secondary: 330 50% 96%;
+    --secondary-foreground: 330 100% 30%;
     
     /* Charcoal - Text Colors */
     --charcoal-50: 210 40% 98%;
@@ -815,4 +815,224 @@ All colors MUST be HSL.
   --lazypay-primary-dark: 330 100% 35%;
   --lazypay-secondary: 0 0% 96.1%;
   --lazypay-accent: 0 0% 100%;
+  --lazypay-ink: 224 71% 4%;
+  --lazypay-cream: 30 50% 98%;
+}
+
+/* ============================================
+   LAZYPAY Stripe-Inspired Design System
+   ============================================ */
+.font-display {
+  font-family: var(--font-display), system-ui, sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.font-body {
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+
+/* Hero gradient mesh */
+.lp-mesh-bg {
+  background:
+    radial-gradient(at 20% 20%, hsla(330, 100%, 70%, 0.15) 0px, transparent 50%),
+    radial-gradient(at 80% 10%, hsla(280, 100%, 70%, 0.1) 0px, transparent 50%),
+    radial-gradient(at 70% 80%, hsla(330, 100%, 60%, 0.12) 0px, transparent 50%),
+    radial-gradient(at 10% 90%, hsla(340, 100%, 80%, 0.1) 0px, transparent 50%),
+    linear-gradient(180deg, #ffffff 0%, #fff5fa 100%);
+}
+
+.lp-grid-bg {
+  background-image:
+    linear-gradient(rgba(255, 30, 126, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 30, 126, 0.05) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+.lp-dark-bg {
+  background: #0A0A0F;
+  background-image:
+    radial-gradient(at 30% 20%, hsla(330, 100%, 50%, 0.2) 0px, transparent 50%),
+    radial-gradient(at 70% 80%, hsla(280, 100%, 50%, 0.15) 0px, transparent 50%);
+}
+
+.lp-noise {
+  position: relative;
+}
+
+.lp-noise::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+/* Gradient text */
+.lp-gradient-text {
+  background: linear-gradient(135deg, #FF1E7E 0%, #FF6B9D 50%, #C71585 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.lp-gradient-text-dark {
+  background: linear-gradient(135deg, #1a1a2e 0%, #FF1E7E 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Premium button styles */
+.lp-btn-primary {
+  background: linear-gradient(135deg, #FF1E7E 0%, #E0156B 100%);
+  color: white;
+  font-weight: 600;
+  border-radius: 9999px;
+  padding: 14px 28px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow:
+    0 4px 14px 0 rgba(255, 30, 126, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.lp-btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.6s;
+}
+
+.lp-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 24px 0 rgba(255, 30, 126, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.lp-btn-primary:hover::before {
+  left: 100%;
+}
+
+.lp-btn-ghost {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 30, 126, 0.2);
+  color: #1a1a2e;
+  font-weight: 600;
+  border-radius: 9999px;
+  padding: 14px 28px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.lp-btn-ghost:hover {
+  background: rgba(255, 30, 126, 0.05);
+  border-color: rgba(255, 30, 126, 0.5);
+}
+
+/* Card hover effects */
+.lp-card {
+  background: white;
+  border-radius: 24px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lp-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 30, 126, 0.2);
+  box-shadow:
+    0 20px 40px -10px rgba(255, 30, 126, 0.15),
+    0 8px 16px -8px rgba(0, 0, 0, 0.08);
+}
+
+/* Logo mark - triangle from LAZYPAY logo */
+.lp-logo-mark {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 12px 0 12px 20px;
+  border-color: transparent transparent transparent #FF1E7E;
+  filter: drop-shadow(0 0 8px rgba(255, 30, 126, 0.4));
+}
+
+/* Marquee */
+@keyframes lp-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.lp-marquee {
+  animation: lp-marquee 30s linear infinite;
+}
+
+/* Glow pulse */
+@keyframes lp-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 30, 126, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(255, 30, 126, 0.6); }
+}
+
+.lp-glow {
+  animation: lp-glow 3s ease-in-out infinite;
+}
+
+/* Fade in up animation */
+@keyframes lp-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.lp-fade-up {
+  animation: lp-fade-up 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.lp-fade-up-delay-1 { animation-delay: 0.1s; opacity: 0; }
+.lp-fade-up-delay-2 { animation-delay: 0.2s; opacity: 0; }
+.lp-fade-up-delay-3 { animation-delay: 0.3s; opacity: 0; }
+.lp-fade-up-delay-4 { animation-delay: 0.4s; opacity: 0; }
+
+/* Eyebrow text */
+.lp-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #FF1E7E;
+  background: rgba(255, 30, 126, 0.08);
+  padding: 6px 14px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 30, 126, 0.15);
+}
+
+.lp-eyebrow::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: #FF1E7E;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(255, 30, 126, 0.8);
+  animation: lp-pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes lp-pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
 }
