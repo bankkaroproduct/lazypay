@@ -381,32 +381,36 @@ const HomeLanding = () => {
       <Navigation />
 
       <main className="flex-1">
-        {/* ── Hero ── */}
-        <section className="relative overflow-hidden bg-white pt-24 sm:pt-32 pb-12 sm:pb-16">
-          {/* Subtle pink glow */}
-          <div className="absolute top-0 right-0 w-[400px] h-[400px] sm:w-[600px] sm:h-[600px] rounded-full bg-pink-500/5 blur-3xl pointer-events-none" />
+        {/* ── Hero — Pink gradient mesh, matches LAZYPAY app pink branding ── */}
+        <section className="relative overflow-hidden lp-mesh-bg pt-24 sm:pt-32 pb-12 sm:pb-16">
+          {/* Grid overlay */}
+          <div className="absolute inset-0 lp-grid-bg opacity-30 pointer-events-none" />
+
+          {/* Decorative orbs */}
+          <div className="absolute -top-10 -right-10 w-72 h-72 sm:w-96 sm:h-96 rounded-full bg-gradient-to-br from-pink-400/30 to-purple-500/15 blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-10 -left-10 w-80 h-80 sm:w-[500px] sm:h-[500px] rounded-full bg-gradient-to-tr from-pink-500/20 to-rose-300/15 blur-3xl pointer-events-none" />
 
           <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
-            <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
+            <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
               {/* Eyebrow badge */}
-              <div className="lp-eyebrow lp-fade-up mb-6 sm:mb-8 text-[10px] sm:text-xs">
-                <span>AI-Powered Card Advisor</span>
+              <div className="lp-eyebrow lp-fade-up mb-5 sm:mb-8 text-[10px] sm:text-xs">
+                <span>India's #1 AI-Powered Card Advisor</span>
               </div>
 
-              {/* Main headline - mobile-first sizing */}
-              <h1 className="font-display lp-fade-up lp-fade-up-delay-1 text-[2.5rem] sm:text-5xl md:text-6xl lg:text-7xl font-bold text-[#0A0A0F] leading-[1.05] tracking-tight mb-4 sm:mb-6">
-                Find your{" "}
-                <span className="lp-gradient-text">perfect card</span>{" "}
-                in 60 seconds.
+              {/* Main headline */}
+              <h1 className="font-display lp-fade-up lp-fade-up-delay-1 text-[2.75rem] sm:text-6xl md:text-7xl lg:text-8xl font-bold text-[#0A0A0F] leading-[0.95] tracking-tight mb-4 sm:mb-6">
+                Pay smarter.
+                <br />
+                <span className="lp-gradient-text">Live lazier.</span>
               </h1>
 
-              <p className="lp-fade-up lp-fade-up-delay-2 text-base sm:text-lg md:text-xl text-slate-600 max-w-xl mx-auto leading-relaxed mb-8 sm:mb-10">
-                AI-powered credit card recommendations tailored to how you spend. No bias. No spam.
+              <p className="lp-fade-up lp-fade-up-delay-2 text-base sm:text-lg md:text-xl text-slate-700 max-w-2xl mx-auto leading-relaxed mb-8 sm:mb-10">
+                Find credit cards that actually pay you back. AI-powered recommendations in under 60 seconds.
               </p>
 
               {/* Search bar - mobile optimized */}
               <div className="lp-fade-up lp-fade-up-delay-3 w-full max-w-xl mb-6">
-                <div className="flex items-center gap-2 bg-white rounded-full shadow-lg shadow-pink-500/10 p-1.5 sm:p-2 border border-slate-100">
+                <div className="flex items-center gap-2 bg-white rounded-full shadow-xl shadow-pink-500/15 p-1.5 sm:p-2 border border-pink-100">
                   <div className="relative flex-1 min-w-0">
                     <Search className="absolute left-4 sm:left-5 top-1/2 -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-slate-400" />
                     <input
@@ -427,7 +431,7 @@ const HomeLanding = () => {
               </div>
 
               {/* Trust line */}
-              <div className="lp-fade-up lp-fade-up-delay-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs sm:text-sm text-slate-500">
+              <div className="lp-fade-up lp-fade-up-delay-4 flex flex-wrap items-center justify-center gap-x-4 sm:gap-x-5 gap-y-2 text-xs sm:text-sm text-slate-600">
                 <div className="flex items-center gap-1.5">
                   <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
                   <span>130+ cards</span>
