@@ -35,7 +35,7 @@ const AdvisorToolsGrid = () => {
             className="text-xs font-semibold tracking-[0.18em] uppercase mb-2"
             style={{ color: "rgba(255,255,255,0.7)" }}
           >
-            BankExpert Toolkit
+            LAZYPAY Toolkit
           </p>
           <h2
             className="text-3xl md:text-4xl font-bold tracking-tight"

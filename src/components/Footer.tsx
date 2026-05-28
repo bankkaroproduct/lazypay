@@ -19,12 +19,7 @@ const Footer = () => {
               Helping users make smarter credit card decisions with personalized recommendations, detailed comparisons, and expert insights.
             </div>
             <div className="flex items-center gap-2 opacity-60 hover:opacity-100 transition-opacity">
-              <span className="text-[10px] uppercase tracking-wider font-medium">Powered by</span>
-              <img
-                src="/bankkaro-powered.svg"
-                alt="BankKaro"
-                className="h-5 w-auto"
-              />
+              <span className="text-[10px] uppercase tracking-wider font-medium">LAZYPAY</span>
             </div>
           </div>
         </div>
@@ -101,9 +96,9 @@ const Footer = () => {
             © {new Date().getFullYear()} Pouring Pounds India Pvt. Ltd. All rights reserved.
           </p>
           <div className="flex items-center gap-4 sm:gap-5 text-xs sm:text-sm opacity-60">
-            <a href="https://bankkaro.com/privacy-policy" target="_blank" className="hover:opacity-100 hover:text-white transition-all">Privacy Policy</a>
+            <a href="https://lazypay.com/privacy-policy" target="_blank" className="hover:opacity-100 hover:text-white transition-all">Privacy Policy</a>
             <span className="hidden sm:inline">•</span>
-            <a href="https://bankkaro.com/terms-conditions" target="_blank" className="hover:opacity-100 hover:text-white transition-all">Terms of Service</a>
+            <a href="https://lazypay.com/terms-conditions" target="_blank" className="hover:opacity-100 hover:text-white transition-all">Terms of Service</a>
           </div>
         </div>
       </div>

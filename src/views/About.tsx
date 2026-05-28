@@ -147,7 +147,7 @@ const About = () => {
               Join 26,900+ subscribers learning how to earn more rewards, skip annual fees, and build a smarter wallet.
             </p>
             <a
-              href="https://www.youtube.com/@bankexpert"
+              href="https://www.youtube.com/@lazypayofficial"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-[#FF0000] hover:bg-[#CC0000] text-white font-bold px-8 py-4 rounded-xl text-base transition-colors"

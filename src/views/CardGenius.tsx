@@ -496,7 +496,7 @@ const CardGenius = () => {
       return;
     }
     try {
-      const response = await fetch('https://bk-api.bankkaro.com/sp/api/cg-eligiblity', {
+      const response = await fetch('https://bk-api.lazypay.com/sp/api/cg-eligiblity', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

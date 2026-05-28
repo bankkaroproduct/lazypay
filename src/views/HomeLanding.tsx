@@ -233,7 +233,7 @@ const CURATED_ALIASES: Record<TabKey, string[]> = {
 
 // ── Tab config with fetch params ─────────────────────────────────────────────
 const TAB_CONFIG: Record<TabKey, { label: string; slug: string; free_cards: string; sort_by: string }> = {
-  picks:    { label: "BankExpert's Picks", slug: "",                          free_cards: "",     sort_by: "priority" },
+  picks:    { label: "LAZYPAY's Picks", slug: "",                          free_cards: "",     sort_by: "priority" },
   best:     { label: "Best Cards",         slug: "best-travel-credit-card",   free_cards: "",     sort_by: "priority" },
   beginner: { label: "Beginner Cards",     slug: "",                          free_cards: "true", sort_by: "priority" },
   cashback: { label: "Best Cashback",      slug: "best-shopping-credit-card", free_cards: "",     sort_by: "priority" },
@@ -294,10 +294,10 @@ function ShubhamPicks() {
         {/* Section header */}
         <div className="mb-8">
           <p className="text-xs font-semibold tracking-[0.18em] uppercase text-gray-400 mb-1">
-            Curated by BankExpert
+            Curated by LAZYPAY
           </p>
-          <h2 className="text-2xl md:text-3xl font-extrabold text-[#004E92]">
-            Explore BankExpert's Picks
+          <h2 className="text-2xl md:text-3xl font-extrabold text-[#FF1E7E]">
+            Explore LAZYPAY's Picks
           </h2>
         </div>
 
@@ -406,8 +406,8 @@ const HomeLanding = () => {
               Learn which cards work best for you. No bias. No spam.
             </p>
 
-            <p className="text-sm font-medium mb-8" style={{ color: "#004E92" }}>
-              ↓ Explore BankExpert's Picks Below
+            <p className="text-sm font-medium mb-8" style={{ color: "#FF1E7E" }}>
+              ↓ Explore LAZYPAY's Picks Below
             </p>
 
             {/* Search bar */}

@@ -24,13 +24,13 @@ export interface BrandConfig {
 }
 
 export const brandConfig: BrandConfig = {
-  name: process.env.NEXT_PUBLIC_BRAND_NAME || 'BankExpert',
-  tagline: process.env.NEXT_PUBLIC_BRAND_TAGLINE || 'Find Your Perfect Credit Card',
-  logo: process.env.NEXT_PUBLIC_BRAND_LOGO || '/bankexpert-logo.png',
-  favicon: process.env.NEXT_PUBLIC_BRAND_FAVICON || '/bankexpert-logo.png',
-  email: 'bankexpert@wwdc.in',
+  name: process.env.NEXT_PUBLIC_BRAND_NAME || 'LAZYPAY',
+  tagline: process.env.NEXT_PUBLIC_BRAND_TAGLINE || 'Smart Payment Solutions for Everyone',
+  logo: process.env.NEXT_PUBLIC_BRAND_LOGO || '/lazypay-logo.png',
+  favicon: process.env.NEXT_PUBLIC_BRAND_FAVICON || '/lazypay-favicon.png',
+  email: process.env.NEXT_PUBLIC_BRAND_EMAIL || 'support@lazypay.com',
   analyticsId: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || '',
-  headerBgColor: process.env.NEXT_PUBLIC_HEADER_BG_COLOR || '#004E92',
+  headerBgColor: process.env.NEXT_PUBLIC_HEADER_BG_COLOR || '#FF1E7E',
   colors: {
     primaryHue: process.env.NEXT_PUBLIC_PRIMARY_HUE || '208',
     primarySaturation: process.env.NEXT_PUBLIC_PRIMARY_SAT || '100%',

@@ -224,9 +224,9 @@ const MobileMenuOverlay = ({
               </p>
               <div className="space-y-2">
                 {[
-                  { label: "YouTube", href: "https://www.youtube.com/@bankexpert" },
-                  { label: "Instagram", href: "https://www.instagram.com/bank.experts/" },
-                  { label: "Facebook", href: "https://www.facebook.com/people/Bank-Expert/61556117044087/#" },
+                  { label: "YouTube", href: "https://www.youtube.com/@lazypayofficial" },
+                  { label: "Instagram", href: "https://www.instagram.com/lazypay_official/" },
+                  { label: "Facebook", href: "https://www.facebook.com/lazypayofficial/" },
                 ].map((s) => (
                   <a
                     key={s.label}
@@ -387,7 +387,7 @@ const Navigation = () => {
               <ChevronDown className="w-4 h-4" />
             </button>
             <div className="invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200 absolute top-full right-0 mt-2 w-44 bg-background border border-border rounded-2xl shadow-xl py-2 z-[100]">
-              <a href="https://www.youtube.com/@bankexpert" target="_blank" rel="noopener noreferrer" className="block px-4 py-2.5 text-foreground hover:bg-accent transition-colors font-medium text-sm">
+              <a href="https://www.youtube.com/@lazypayofficial" target="_blank" rel="noopener noreferrer" className="block px-4 py-2.5 text-foreground hover:bg-accent transition-colors font-medium text-sm">
                 YouTube
               </a>
               <a href="https://www.instagram.com/bank.experts/" target="_blank" rel="noopener noreferrer" className="block px-4 py-2.5 text-foreground hover:bg-accent transition-colors font-medium text-sm">

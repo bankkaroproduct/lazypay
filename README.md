@@ -1,4 +1,4 @@
-# BankkaroTide Frontend
+# LAZYPAY Frontend
 
 A whitelabel credit card comparison and recommendation platform built with Next.js. Can be branded for any partner via environment variables.
 

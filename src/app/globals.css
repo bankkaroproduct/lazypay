@@ -804,15 +804,15 @@ All colors MUST be HSL.
 }
 
 /* ============================================
-   BankExpert Brand Color Variables
-   Primary: #004E92  →  HSL 208 100% 28.6%
+   LAZYPAY Brand Color Variables
+   Primary: #FF1E7E  →  HSL 330 100% 45%
    Secondary: #F5F5F5 →  HSL 0 0% 96.1%
    Accent: #FFFFFF   →  HSL 0 0% 100%
    ============================================ */
 :root {
-  --bankexpert-primary: 208 100% 28.6%;
-  --bankexpert-primary-light: 208 100% 40%;
-  --bankexpert-primary-dark: 208 100% 18%;
-  --bankexpert-secondary: 0 0% 96.1%;
-  --bankexpert-accent: 0 0% 100%;
+  --lazypay-primary: 330 100% 45%;
+  --lazypay-primary-light: 330 100% 55%;
+  --lazypay-primary-dark: 330 100% 35%;
+  --lazypay-secondary: 0 0% 96.1%;
+  --lazypay-accent: 0 0% 100%;
 }

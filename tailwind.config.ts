@@ -109,12 +109,12 @@ export default {
           500: "hsl(var(--info-500))",
           700: "hsl(var(--info-700))",
         },
-        bankexpert: {
-          primary: "hsl(var(--bankexpert-primary))",
-          "primary-light": "hsl(var(--bankexpert-primary-light))",
-          "primary-dark": "hsl(var(--bankexpert-primary-dark))",
-          secondary: "hsl(var(--bankexpert-secondary))",
-          accent: "hsl(var(--bankexpert-accent))",
+        lazypay: {
+          primary: "hsl(var(--lazypay-primary))",
+          "primary-light": "hsl(var(--lazypay-primary-light))",
+          "primary-dark": "hsl(var(--lazypay-primary-dark))",
+          secondary: "hsl(var(--lazypay-secondary))",
+          accent: "hsl(var(--lazypay-accent))",
         },
       },
       backgroundImage: {
