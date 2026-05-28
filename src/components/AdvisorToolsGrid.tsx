@@ -1,0 +1,101 @@
+"use client";
+import { ArrowRight, Sparkles, Swords, LayoutGrid } from "lucide-react";
+import { Link } from "@/components/Link";
+
+const tools = [
+  {
+    icon: Sparkles,
+    title: "Super Card Genius",
+    description:
+      "Get AI-powered recommendations for the perfect credit card based on your spending habits.",
+    to: "/card-genius",
+  },
+  {
+    icon: Swords,
+    title: "Beat My Card",
+    description:
+      "Find a better card than the one you already have — compare benefits, fees, and rewards instantly.",
+    to: "/beat-my-card",
+  },
+  {
+    icon: LayoutGrid,
+    title: "Category Card Genius",
+    description:
+      "Discover the best credit card for any spending category — fuel, travel, groceries, and more.",
+    to: "/card-genius-category",
+  },
+];
+
+const AdvisorToolsGrid = () => {
+  return (
+    <section className="py-16 md:py-24" style={{ backgroundColor: "#004E92" }}>
+      <div className="container max-w-5xl mx-auto px-4">
+        <div className="text-center mb-12">
+          <p
+            className="text-xs font-semibold tracking-[0.18em] uppercase mb-2"
+            style={{ color: "rgba(255,255,255,0.7)" }}
+          >
+            BankExpert Toolkit
+          </p>
+          <h2
+            className="text-3xl md:text-4xl font-bold tracking-tight"
+            style={{ color: "#FFFFFF" }}
+          >
+            Powerful Financial Tools
+          </h2>
+          <p className="mt-3 text-base" style={{ color: "rgba(255,255,255,0.75)" }}>
+            Everything you need to make smarter credit card decisions.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {tools.map((tool) => (
+            <Link
+              to={tool.to}
+              key={tool.title}
+              className="group rounded-2xl p-8 flex flex-col transition-all duration-300 hover:-translate-y-1"
+              style={{
+                backgroundColor: "rgba(255,255,255,0.08)",
+                border: "1px solid rgba(255,255,255,0.2)",
+              }}
+            >
+              {/* Icon */}
+              <div
+                className="inline-flex items-center justify-center h-12 w-12 rounded-xl mb-5"
+                style={{ backgroundColor: "rgba(255,255,255,0.12)" }}
+              >
+                <tool.icon
+                  className="h-6 w-6"
+                  style={{ color: "#FFFFFF", stroke: "#FFFFFF" }}
+                />
+              </div>
+
+              <h3
+                className="text-lg font-bold mb-2"
+                style={{ color: "#FFFFFF" }}
+              >
+                {tool.title}
+              </h3>
+
+              <p
+                className="text-sm leading-relaxed mb-5 flex-1"
+                style={{ color: "rgba(255,255,255,0.75)" }}
+              >
+                {tool.description}
+              </p>
+
+              <span
+                className="inline-flex items-center gap-1 text-sm font-semibold group-hover:gap-2 transition-all"
+                style={{ color: "#FFFFFF" }}
+              >
+                Try Now <ArrowRight className="h-4 w-4" />
+              </span>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default AdvisorToolsGrid;
