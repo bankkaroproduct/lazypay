@@ -469,7 +469,7 @@ const CardListing = () => {
         inhandIncome: eligibility.inhandIncome,
         empStatus: eligibility.empStatus
       };
-      const response = await fetch('https://bk-api.bankkaro.com/sp/api/cg-eligiblity', {
+      const response = await fetch('https://bk-prod-external.bankkaro.com/sp/api/cg-eligiblity', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

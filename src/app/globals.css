@@ -729,6 +729,7 @@ All colors MUST be HSL.
       position: fixed;
       inset: 0;
       height: 100vh;
+      height: 100dvh;
       width: 100%;
       z-index: var(--z-index-menu);
       display: flex;
@@ -736,6 +737,7 @@ All colors MUST be HSL.
       background: hsl(var(--background));
       padding-top: env(safe-area-inset-top);
       transform: translateY(-4%);
+      overflow: hidden;
       opacity: 0;
       transition: transform 220ms ease, opacity 220ms ease;
       will-change: transform, opacity;

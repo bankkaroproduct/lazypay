@@ -135,11 +135,11 @@ const MobileMenuOverlay = ({
         onClick={handleBackdropClick}
       >
         <div
-          className="relative flex flex-col flex-1 bg-white shadow-2xl"
+          className="relative flex flex-col flex-1 min-h-0 bg-white shadow-2xl"
           onClick={handleDialogClick}
         >
           {/* Header with LAZYPAY wordmark */}
-          <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-slate-100">
+          <div className="flex-shrink-0 flex items-center justify-between px-5 pt-5 pb-4 border-b border-slate-100">
             <div className="flex items-center gap-2">
               <div className="lp-logo-mark" />
               <span className="font-display text-xl font-extrabold tracking-tight text-[#0A0A0F]">
@@ -157,7 +157,7 @@ const MobileMenuOverlay = ({
           </div>
 
           {/* Content */}
-          <div className="flex-1 overflow-y-auto px-5 py-5 bg-white">
+          <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-5 py-5 bg-white">
             {/* Primary Navigation - pill chips */}
             <div className="grid grid-cols-2 gap-3 mb-6">
               <Link
@@ -286,7 +286,7 @@ const MobileMenuOverlay = ({
           </div>
 
           {/* Footer CTA */}
-          <div className="px-5 py-4 border-t border-slate-100 bg-white">
+          <div className="flex-shrink-0 px-5 py-4 border-t border-slate-100 bg-white safe-area-inset-bottom">
             <Link
               to="/card-genius"
               onClick={onClose}
