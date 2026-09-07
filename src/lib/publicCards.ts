@@ -181,22 +181,44 @@ function normalize(raw: any): Card {
   };
 }
 
+// 10MB+ payload — exceeds Next's 2MB fetch data-cache limit, so we can't use
+// `next: { revalidate }`. Every route (/, /cards, /cards/[alias], /card-genius,
+// /card-genius-category, /beat-my-card) calls getCards() on its own, so without
+// this cache each navigation re-fetched the full payload from scratch — that
+// multi-second, feedback-less wait is what made buttons feel like they needed
+// several clicks. Cache the normalized result in memory for a short TTL instead.
+const CACHE_TTL_MS = 5 * 60 * 1000;
+let cache: { data: Card[]; ts: number } | null = null;
+let inflight: Promise<Card[]> | null = null;
+
+async function fetchCards(): Promise<Card[]> {
+  const res = await fetch(CARDS_URL, {
+    headers: { "Content-Type": "application/json" },
+    cache: "no-store",
+  });
+  if (!res.ok) throw new Error(`Card API ${res.status}`);
+  const json = await res.json();
+  const data: any[] = Array.isArray(json?.data) ? json.data : [];
+  return data
+    .map(normalize)
+    .filter((c) => c.name)
+    .sort((a, b) => a.priority - b.priority);
+}
+
 export async function getCards(): Promise<Card[]> {
-  try {
-    // 10MB+ payload — never cache (exceeds Next's 2MB data-cache limit).
-    const res = await fetch(CARDS_URL, {
-      headers: { "Content-Type": "application/json" },
-      cache: "no-store",
+  if (cache && Date.now() - cache.ts < CACHE_TTL_MS) return cache.data;
+  if (inflight) return inflight;
+  inflight = fetchCards()
+    .then((data) => {
+      cache = { data, ts: Date.now() };
+      return data;
+    })
+    .catch((err) => {
+      console.error("[publicCards] fetch failed:", err);
+      return cache?.data ?? [];
+    })
+    .finally(() => {
+      inflight = null;
     });
-    if (!res.ok) throw new Error(`Card API ${res.status}`);
-    const json = await res.json();
-    const data: any[] = Array.isArray(json?.data) ? json.data : [];
-    return data
-      .map(normalize)
-      .filter((c) => c.name)
-      .sort((a, b) => a.priority - b.priority);
-  } catch (err) {
-    console.error("[publicCards] fetch failed:", err);
-    return [];
-  }
+  return inflight;
 }
