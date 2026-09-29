@@ -60,13 +60,13 @@ export default function CardDetailView({ card, details, fd = false }: { card: Ca
           >
             <div style={{ ...cap, color: T.pink }}>Minimum Fixed Deposit</div>
             <div style={{ fontFamily: display, fontWeight: 700, fontSize: minFD ? "clamp(38px,6vw,54px)" : 26, lineHeight: 1.05, marginTop: 6 }}>
-              {minFD ?? "Not published"}
+              {minFD ?? "Not Specified"}
             </div>
-            <div style={{ fontSize: 13.5, color: T.mute, marginTop: 8, lineHeight: 1.5 }}>
-              {minFD
-                ? `Open an FD of ${minFD} or more with ${card.bank} to get this card. Your credit limit is set against the deposit, which keeps earning interest.`
-                : `${card.bank} hasn't published a minimum FD for this card — confirm the amount on the application page.`}
-            </div>
+            {minFD && (
+              <div style={{ fontSize: 13.5, color: T.mute, marginTop: 8, lineHeight: 1.5 }}>
+                Open an FD of {minFD} or more with {card.bank} to get this card. Your credit limit is set against the deposit, which keeps earning interest.
+              </div>
+            )}
           </section>
         )}
         {/* Top area */}
@@ -290,7 +290,7 @@ export default function CardDetailView({ card, details, fd = false }: { card: Ca
             {card.isFD ? "Minimum FD" : "Top reward"}
           </div>
           <div style={{ fontFamily: display, fontWeight: 700, fontSize: 20, color: T.pink, whiteSpace: "nowrap" }}>
-            {card.isFD ? (minFD ?? "—") : <>
+            {card.isFD ? (minFD ?? "Not Specified") : <>
               {tr.pct || "—"}
               <span style={{ fontSize: 13, color: T.mute }}> {tr.cat}</span>
             </>}
