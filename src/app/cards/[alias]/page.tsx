@@ -6,6 +6,7 @@ import CardDetailView from "@/components/discover/CardDetailView";
 
 interface Props {
   params: Promise<{ alias: string }>;
+  searchParams: Promise<{ from?: string }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -17,10 +18,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function CardDetailsPage({ params }: Props) {
+export default async function CardDetailsPage({ params, searchParams }: Props) {
   const { alias } = await params;
+  const { from } = await searchParams;
   const cards = await getCards();
   const card = cards.find((c) => c.alias === alias);
   if (!card) notFound();
-  return <CardDetailView card={card} />;
+  return <CardDetailView card={card} fd={from === "fd"} />;
 }

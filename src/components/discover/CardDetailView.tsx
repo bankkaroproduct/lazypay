@@ -11,11 +11,23 @@ import { useComparison } from "@/contexts/ComparisonContext";
 import { getCardKey } from "@/utils/cardAlias";
 import { redirectToCardApplication } from "@/utils/redirectHandler";
 import { Link } from "@/components/Link";
+import { loadLead, withLeadParam } from "@/lib/lead";
+import { analytics } from "@/services/analytics";
 
-export default function CardDetailView({ card }: { card: Card }) {
+/**
+ * `fd` = opened from the FD flow: only links back to it (no nav, Card Genius,
+ * Compare or footer links to the parked screens), and Apply carries the lead as p2.
+ */
+export default function CardDetailView({ card, fd = false }: { card: Card; fd?: boolean }) {
   const { toggleCard, isSelected } = useComparison();
   const tr = topReward(card);
   const selected = isSelected(getCardKey(card.raw));
+
+  const apply = () => {
+    analytics.trackCardAction("Apply Now", card.name);
+    if (fd) redirectToCardApplication(card.raw, { networkUrl: withLeadParam(card.raw.network_url, loadLead()) });
+    else redirectToCardApplication(card.raw);
+  };
 
   return (
     <div
@@ -26,11 +38,11 @@ export default function CardDetailView({ card }: { card: Card }) {
         fontFamily: "var(--font-body)",
       }}
     >
-      <Masthead />
+      {fd ? <Masthead showNav={false} homeTo="/" /> : <Masthead />}
 
       <main style={{ maxWidth: 1000, margin: "0 auto", padding: "24px 24px 120px" }}>
         <div style={{ marginBottom: 24 }}>
-          <BackPill to="/cards" label="All cards" />
+          {fd ? <BackPill to="/" label="FD cards" /> : <BackPill to="/cards" label="All cards" />}
         </div>
         {/* Top area */}
         <div className="grid grid-cols-1 md:grid-cols-[360px_minmax(0,1fr)] items-start" style={{ gap: 48 }}>
@@ -110,7 +122,7 @@ export default function CardDetailView({ card }: { card: Card }) {
 
             {/* Stats grid */}
             <div
-              className="grid grid-cols-2 sm:grid-cols-3"
+              className={fd ? "grid grid-cols-2" : "grid grid-cols-2 sm:grid-cols-3"}
               style={{
                 gap: 1,
                 background: T.line,
@@ -128,14 +140,15 @@ export default function CardDetailView({ card }: { card: Card }) {
                   <span style={{ fontSize: 13, color: T.mute }}> {tr.cat}</span>
                 </span>
               </StatCell>
-              <StatCell label="Min income" value={card.minIncome} />
-              <StatCell label="Min credit score" value={card.minScore} />
+              {/* FD cards are approved against the deposit; the feed's income/score values contradict that. */}
+              {!fd && <StatCell label="Min income" value={card.minIncome} />}
+              {!fd && <StatCell label="Min credit score" value={card.minScore} />}
               <StatCell label="Networks">
                 <span style={{ fontSize: 15 }}>{card.networks.join(" · ")}</span>
               </StatCell>
             </div>
 
-            <Link
+            {!fd && <Link
               to="/card-genius"
               style={{
                 border: "1px solid rgba(255,30,126,0.5)",
@@ -149,7 +162,7 @@ export default function CardDetailView({ card }: { card: Card }) {
               }}
             >
               See how much this card saves you →
-            </Link>
+            </Link>}
           </div>
         </div>
 
@@ -219,7 +232,7 @@ export default function CardDetailView({ card }: { card: Card }) {
         </div>
       </main>
 
-      <DiscoverFooter />
+      {!fd && <DiscoverFooter />}
 
       {/* Sticky bottom bar */}
       <div
@@ -256,7 +269,7 @@ export default function CardDetailView({ card }: { card: Card }) {
         </div>
 
         <div className="flex items-center" style={{ gap: 8, flex: "none" }}>
-          <button
+          {!fd && <button
             type="button"
             onClick={() => toggleCard(card.raw)}
             aria-label="Compare"
@@ -272,10 +285,10 @@ export default function CardDetailView({ card }: { card: Card }) {
             }}
           >
             {selected ? "✓" : "+ Compare"}
-          </button>
+          </button>}
           <button
             type="button"
-            onClick={() => redirectToCardApplication(card.raw)}
+            onClick={apply}
             style={{
               background: T.pink,
               color: T.onPink,

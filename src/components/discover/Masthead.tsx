@@ -16,11 +16,14 @@ const NAV = [
 export function Masthead({
   kicker,
   showNav = true,
+  homeTo = "/cards",
 }: {
   kicker?: string;
   /** Deprecated: back navigation now renders as a BackPill in the page body. */
   back?: { label: string; to: string };
   showNav?: boolean;
+  /** Where the logo links to. */
+  homeTo?: string;
 }) {
   const [menu, setMenu] = useState(false);
 
@@ -38,7 +41,7 @@ export function Masthead({
       >
         {/* left: brand, leftmost */}
         <div className="flex items-center gap-3" style={{ minWidth: 0 }}>
-          <Link to="/cards" style={{ textDecoration: "none", flex: "none" }}>
+          <Link to={homeTo} style={{ textDecoration: "none", flex: "none" }}>
             <LazyPayLogo height={22} />
           </Link>
           {kicker && (

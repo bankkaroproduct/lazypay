@@ -1,35 +1,26 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent, type MouseEvent } from "react";
 import type { Card } from "@/lib/publicCards";
 import { redirectToCardApplication } from "@/utils/redirectHandler";
 import { analytics } from "@/services/analytics";
 import { cleanName, normalizePhone, validateName, validatePhone } from "@/lib/leadValidation";
+import { type Lead, loadLead, storeLead, withLeadParam } from "@/lib/lead";
+import { Link } from "@/components/Link";
 import { CardObject } from "./CardObject";
 import { LazyPayLogo } from "./Logo";
 import { T, serif, display, cap, ctaBtn, applyBtn, feeGst } from "./theme";
-
-type Lead = { name: string; phone: string };
-const LEAD_KEY = "lp_lead";
 
 /** Step 1: name + mobile. Step 2: the Fixed-Deposit card list. */
 export default function FDFlow({ cards }: { cards: Card[] }) {
   const [lead, setLead] = useState<Lead | null>(null);
 
   // Per-tab convenience: a refresh keeps the user on the card list.
-  useEffect(() => {
-    try {
-      const saved = sessionStorage.getItem(LEAD_KEY);
-      if (saved) setLead(JSON.parse(saved));
-    } catch { /* storage blocked — start at step 1 */ }
-  }, []);
+  useEffect(() => { setLead(loadLead()); }, []);
 
   const saveLead = (l: Lead | null) => {
     setLead(l);
-    try {
-      if (l) sessionStorage.setItem(LEAD_KEY, JSON.stringify(l));
-      else sessionStorage.removeItem(LEAD_KEY);
-    } catch { /* ignore */ }
+    storeLead(l);
   };
 
   return (
@@ -129,16 +120,10 @@ function LeadForm({ onDone }: { onDone: (l: Lead) => void }) {
 function FDList({ cards, lead }: { cards: Card[]; lead: Lead }) {
   const first = lead.name.split(" ")[0];
 
-  // Pass the lead to the partner tracking link as p2=<name>_<number>.
-  const apply = (c: Card) => {
+  const apply = (e: MouseEvent, c: Card) => {
+    e.preventDefault(); e.stopPropagation();
     analytics.trackCardAction("Apply Now", c.name);
-    let networkUrl = c.raw.network_url;
-    try {
-      const u = new URL(networkUrl);
-      u.searchParams.set("p2", `${lead.name}_${lead.phone}`);
-      networkUrl = u.toString();
-    } catch { /* no/invalid URL — let the redirect handler report it */ }
-    redirectToCardApplication(c.raw, { networkUrl });
+    redirectToCardApplication(c.raw, { networkUrl: withLeadParam(c.raw.network_url, lead) });
   };
 
   return (
@@ -157,22 +142,24 @@ function FDList({ cards, lead }: { cards: Card[]; lead: Lead }) {
 
       <div className="flex flex-col" style={{ gap: 12 }}>
         {cards.map((c) => (
-          <div key={c.id} style={{ border: `1px solid ${T.line}`, borderRadius: 18, padding: 14, background: T.surface }}>
+          <Link key={c.id} to={`/cards/${c.alias}?from=fd`} onClick={() => analytics.trackCardAction("View Details", c.name)}
+            style={{ display: "block", border: `1px solid ${T.line}`, borderRadius: 18, padding: 14, background: T.surface, color: T.ink, textDecoration: "none" }}>
             <div className="flex items-center" style={{ gap: 12 }}>
               <CardObject card={c} />
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontFamily: serif, fontSize: 15.5, lineHeight: 1.2 }}>{c.name.trim()}</div>
                 <div style={{ fontSize: 11, color: T.mute, marginTop: 3, textTransform: "uppercase", letterSpacing: "0.08em" }}>{c.bank}</div>
               </div>
+              <span style={{ color: T.faint, fontSize: 20, lineHeight: 1 }}>›</span>
             </div>
             {c.usps[0] && <div style={{ fontSize: 12.5, color: T.ink, marginTop: 10, lineHeight: 1.4 }}>✦ {c.usps[0].header.trim()}</div>}
             <div className="flex items-center justify-between" style={{ marginTop: 12 }}>
               <div style={{ fontSize: 12, color: T.mute }}>
                 Joining <b style={{ color: T.ink }}>{feeGst(c.joiningFee)}</b> · Annual <b style={{ color: T.ink }}>{feeGst(c.annualFee)}</b>
               </div>
-              <button onClick={() => apply(c)} style={applyBtn(true)}>Apply ↗</button>
+              <button onClick={(e) => apply(e, c)} style={applyBtn(true)}>Apply ↗</button>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>
