@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getCards } from "@/lib/publicCards";
+import { getCards, getCardDetails } from "@/lib/publicCards";
 import { brandConfig } from "@/config/brand.config";
 import CardDetailView from "@/components/discover/CardDetailView";
 
@@ -24,5 +24,6 @@ export default async function CardDetailsPage({ params, searchParams }: Props) {
   const cards = await getCards();
   const card = cards.find((c) => c.alias === alias);
   if (!card) notFound();
-  return <CardDetailView card={card} fd={from === "fd"} />;
+  const details = await getCardDetails(alias);
+  return <CardDetailView card={card} details={details} fd={from === "fd"} />;
 }

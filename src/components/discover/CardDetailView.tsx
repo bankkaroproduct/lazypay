@@ -1,8 +1,8 @@
 "use client";
 
-import type { Card } from "@/lib/publicCards";
-import { T, feeGst, serif, display } from "./theme";
-import { topReward } from "@/lib/discoverEngine";
+import type { Card, CardDetails } from "@/lib/publicCards";
+import { T, feeGst, serif, display, cap } from "./theme";
+import { topReward, rupee } from "@/lib/discoverEngine";
 import { CardObject, Stars } from "./CardObject";
 import { Masthead } from "./Masthead";
 import { BackPill } from "./BackPill";
@@ -18,10 +18,15 @@ import { analytics } from "@/services/analytics";
  * `fd` = opened from the FD flow: only links back to it (no nav, Card Genius,
  * Compare or footer links to the parked screens), and Apply carries the lead as p2.
  */
-export default function CardDetailView({ card, fd = false }: { card: Card; fd?: boolean }) {
+export default function CardDetailView({ card, details, fd = false }: { card: Card; details: CardDetails | null; fd?: boolean }) {
   const { toggleCard, isSelected } = useComparison();
   const tr = topReward(card);
   const selected = isSelected(getCardKey(card.raw));
+
+  // The feed repeats USPs; show each once.
+  const usps = card.usps.filter((u, i, all) =>
+    u.header.trim() && all.findIndex((x) => x.header.trim().toLowerCase() === u.header.trim().toLowerCase()) === i);
+  const minFD = card.minFD != null ? rupee(card.minFD) : null;
 
   const apply = () => {
     analytics.trackCardAction("Apply Now", card.name);
@@ -44,6 +49,26 @@ export default function CardDetailView({ card, fd = false }: { card: Card; fd?: 
         <div style={{ marginBottom: 24 }}>
           {fd ? <BackPill to="/" label="FD cards" /> : <BackPill to="/cards" label="All cards" />}
         </div>
+
+        {card.isFD && (
+          <section
+            style={{
+              border: "1px solid rgba(255,30,126,0.35)", borderRadius: 22,
+              background: "linear-gradient(110deg, rgba(255,30,126,0.12), rgba(255,30,126,0.03) 70%)",
+              padding: "22px 24px", marginBottom: 36,
+            }}
+          >
+            <div style={{ ...cap, color: T.pink }}>Minimum Fixed Deposit</div>
+            <div style={{ fontFamily: display, fontWeight: 700, fontSize: minFD ? "clamp(38px,6vw,54px)" : 26, lineHeight: 1.05, marginTop: 6 }}>
+              {minFD ?? "Not published"}
+            </div>
+            <div style={{ fontSize: 13.5, color: T.mute, marginTop: 8, lineHeight: 1.5 }}>
+              {minFD
+                ? `Open an FD of ${minFD} or more with ${card.bank} to get this card. Your credit limit is set against the deposit, which keeps earning interest.`
+                : `${card.bank} hasn't published a minimum FD for this card — confirm the amount on the application page.`}
+            </div>
+          </section>
+        )}
         {/* Top area */}
         <div className="grid grid-cols-1 md:grid-cols-[360px_minmax(0,1fr)] items-start" style={{ gap: 48 }}>
           {/* LEFT */}
@@ -177,7 +202,7 @@ export default function CardDetailView({ card, fd = false }: { card: Card; fd?: 
         >
           Why we picked it
         </h2>
-        {card.usps.slice(0, 5).map((usp, i) => (
+        {usps.map((usp, i) => (
           <div
             key={i}
             className="flex"
@@ -212,6 +237,8 @@ export default function CardDetailView({ card, fd = false }: { card: Card; fd?: 
             </div>
           </div>
         ))}
+
+        {details && <DetailSections card={card} details={details} fd={fd} />}
 
         {/* Tags */}
         <div className="flex flex-wrap" style={{ gap: 8, marginTop: 26 }}>
@@ -260,11 +287,13 @@ export default function CardDetailView({ card, fd = false }: { card: Card; fd?: 
               color: T.faint,
             }}
           >
-            Top reward
+            {card.isFD ? "Minimum FD" : "Top reward"}
           </div>
           <div style={{ fontFamily: display, fontWeight: 700, fontSize: 20, color: T.pink, whiteSpace: "nowrap" }}>
-            {tr.pct || "—"}
-            <span style={{ fontSize: 13, color: T.mute }}> {tr.cat}</span>
+            {card.isFD ? (minFD ?? "—") : <>
+              {tr.pct || "—"}
+              <span style={{ fontSize: 13, color: T.mute }}> {tr.cat}</span>
+            </>}
           </div>
         </div>
 
@@ -334,5 +363,110 @@ function StatCell({
         {children ?? value}
       </div>
     </div>
+  );
+}
+
+const h2: React.CSSProperties = { fontFamily: serif, fontStyle: "italic", fontSize: 22, margin: "40px 0 14px" };
+const row: React.CSSProperties = { padding: "14px 0", borderTop: `1px solid ${T.line}` };
+const note: React.CSSProperties = { fontSize: 13, color: T.mute, marginTop: 4, lineHeight: 1.55 };
+
+/** Fees, rewards, eligibility, exclusions, T&C and FAQs — only the parts the feed actually has. */
+function DetailSections({ card, details: d, fd }: { card: Card; details: CardDetails; fd: boolean }) {
+  // FD cards don't need a credit score; the feed's score copy contradicts that.
+  const eligibility = fd ? d.eligibility.filter((e) => e.label !== "Credit score") : d.eligibility;
+
+  return (
+    <>
+      <h2 style={h2}>Fees</h2>
+      <div style={row}>
+        <div className="flex justify-between" style={{ gap: 12 }}>
+          <span style={{ fontWeight: 600, fontSize: 15 }}>Joining fee</span>
+          <span style={{ fontFamily: display, fontWeight: 700 }}>{feeGst(card.joiningFee)}</span>
+        </div>
+        {d.joiningFeeNote.map((n, i) => <div key={i} style={note}>{n}</div>)}
+      </div>
+      <div style={row}>
+        <div className="flex justify-between" style={{ gap: 12 }}>
+          <span style={{ fontWeight: 600, fontSize: 15 }}>Annual fee</span>
+          <span style={{ fontFamily: display, fontWeight: 700 }}>{feeGst(card.annualFee)}</span>
+        </div>
+        {d.annualFeeNote.map((n, i) => <div key={i} style={note}>{n}</div>)}
+      </div>
+      <div style={{ fontSize: 11.5, color: T.faint, marginTop: 6 }}>Fees shown include 18% GST.</div>
+
+      {(d.rewardRate || d.redemption.length > 0) && (
+        <>
+          <h2 style={h2}>Rewards</h2>
+          {d.rewardRate && (
+            <div style={row}>
+              <div style={{ fontWeight: 600, fontSize: 15 }}>Reward value</div>
+              <div style={note}>{d.rewardRate}</div>
+            </div>
+          )}
+          {d.redemption.length > 0 && (
+            <div style={row}>
+              <div style={{ fontWeight: 600, fontSize: 15 }}>Redeem for</div>
+              <ul style={{ ...note, paddingLeft: 18, listStyle: "disc" }}>
+                {d.redemption.map((r, i) => <li key={i}>{r}</li>)}
+              </ul>
+              {d.catalogueUrl && (
+                <a href={d.catalogueUrl} target="_blank" rel="noopener noreferrer" style={{ display: "inline-block", marginTop: 8, fontSize: 13, color: T.pink }}>
+                  View rewards catalogue ↗
+                </a>
+              )}
+            </div>
+          )}
+        </>
+      )}
+
+      {eligibility.length > 0 && (
+        <>
+          <h2 style={h2}>Eligibility</h2>
+          {eligibility.map((e) => (
+            <div key={e.label} className="grid sm:grid-cols-[160px_1fr]" style={{ ...row, gap: 4 }}>
+              <span style={{ fontWeight: 600, fontSize: 15 }}>{e.label}</span>
+              <span style={{ fontSize: 14, color: T.mute, lineHeight: 1.55 }}>{e.value}</span>
+            </div>
+          ))}
+        </>
+      )}
+
+      {d.exclusions.length > 0 && (
+        <>
+          <h2 style={h2}>No rewards on</h2>
+          <div className="flex flex-wrap" style={{ gap: 8 }}>
+            {d.exclusions.map((x) => (
+              <span key={x} style={{ fontSize: 12.5, color: T.mute, border: `1px solid ${T.line}`, borderRadius: 999, padding: "6px 12px" }}>{x}</span>
+            ))}
+          </div>
+        </>
+      )}
+
+      {d.tnc && (
+        <>
+          <h2 style={h2}>Terms</h2>
+          <p style={{ fontSize: 13.5, color: T.mute, lineHeight: 1.6, margin: 0 }}>{d.tnc}</p>
+        </>
+      )}
+
+      {d.faqs.length > 0 && (
+        <>
+          <h2 style={h2}>Questions people ask</h2>
+          {d.faqs.map((g) => (
+            <details key={g.topic} style={{ borderTop: `1px solid ${T.line}` }}>
+              <summary style={{ cursor: "pointer", padding: "16px 0", fontWeight: 600, fontSize: 15 }}>
+                {g.topic} <span style={{ color: T.faint, fontWeight: 400 }}>· {g.items.length}</span>
+              </summary>
+              {g.items.map((f, i) => (
+                <div key={i} style={{ padding: "0 0 14px 14px", borderLeft: `2px solid ${T.line}`, marginBottom: 12 }}>
+                  <div style={{ fontSize: 14, fontWeight: 600 }}>{f.q}</div>
+                  <div style={note}>{f.a}</div>
+                </div>
+              ))}
+            </details>
+          ))}
+        </>
+      )}
+    </>
   );
 }

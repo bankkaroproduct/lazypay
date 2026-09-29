@@ -54,6 +54,8 @@ export interface Card {
   rates: Partial<Record<SpendCat, number>>;
   /** Fixed-Deposit backed (secured) card — approval without a credit score. */
   isFD: boolean;
+  /** Minimum FD in ₹, parsed from the card's own copy; null = not published. */
+  minFD: number | null;
   /** Full-fidelity object for the existing Compare panel / redirect handler / detail. */
   raw: any;
 }
@@ -147,6 +149,126 @@ function detectFD(raw: any, alias: string): boolean {
   return FD_TEXT.test(own);
 }
 
+const rupees = (v: string) => parseInt(v.replace(/,/g, ""), 10);
+const AMT = String.raw`(?:rs\.?\s?|₹\s?|inr\s?)([\d,]{3,})`;
+const MIN_FD_RE = [
+  new RegExp(String.raw`minimum (?:fd|fixed deposit) amount (?:required )?(?:is )?(?:of )?` + AMT, "i"),
+  new RegExp(String.raw`(?:fd|fixed deposit|deposit) of (?:just |only |at least |minimum |min\.? )?` + AMT, "i"),
+];
+
+/**
+ * Minimum FD isn't a field in the feed. Read it from the card's own USPs, T&C,
+ * meta and eligibility copy, then from its FAQ that asks about the minimum FD.
+ * Fee-waiver copy is skipped on purpose ("FD of ₹5,000 or above waives the fee").
+ */
+function parseMinFD(raw: any): number | null {
+  const own = [
+    ...(raw.product_usps || []).map((u: any) => `${u?.header ?? ""} ${u?.description ?? ""}`),
+    raw.tnc, raw.meta_description, raw.income_comment, raw.income_self_emp_comment,
+  ].map((x) => String(x ?? "")).join(" \n ");
+  for (const re of MIN_FD_RE) {
+    const m = own.match(re);
+    if (m) return rupees(m[1]);
+  }
+  for (const b of raw.product_blogs || []) {
+    for (const f of Array.isArray(b?.faqs) ? b.faqs : []) {
+      if (!/minimum (?:fd|fixed deposit)/i.test(f?.question || "")) continue;
+      const m = String(f?.answer || "").match(new RegExp(AMT, "i"));
+      if (m) return rupees(m[1]);
+    }
+  }
+  return null;
+}
+
+/* ── full details (detail page only — kept off Card so list payloads stay small) ── */
+
+export interface CardFaq { q: string; a: string }
+export interface CardDetails {
+  joiningFeeNote: string[];
+  annualFeeNote: string[];
+  rewardRate: string;
+  redemption: string[];
+  catalogueUrl: string;
+  eligibility: { label: string; value: string }[];
+  exclusions: string[];
+  tnc: string;
+  faqs: { topic: string; items: CardFaq[] }[];
+}
+
+const JUNK = new Set(["", "0", "-", "na", "n/a", "nil", "none", "null", "undefined", "not applicable"]);
+const stripHtml = (v: unknown) =>
+  String(v ?? "").replace(/<br\s*\/?>/gi, " ").replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/\s+/g, " ").trim();
+const clean = (v: unknown) => {
+  const t = stripHtml(v);
+  return JUNK.has(t.toLowerCase().replace(/\.$/, "")) ? "" : t;
+};
+const htmlList = (v: unknown): string[] => {
+  const html = String(v ?? "");
+  const items = [...html.matchAll(/<li[^>]*>([\s\S]*?)<\/li>/gi)].map((m) => clean(m[1])).filter(Boolean);
+  return items.length ? items : [clean(html)].filter(Boolean);
+};
+const httpsUrl = (v: unknown) => (/^https:\/\//i.test(String(v ?? "").trim()) ? String(v).trim() : "");
+
+const FAQ_TOPICS: Record<string, string> = {
+  best_for: "Who it's for",
+  eligibility: "Eligibility",
+  document_required: "Documents",
+  how_to_apply: "How to apply",
+  credit_limit_and_expect: "Credit limit",
+  all_benefits: "Benefits",
+  joining_annual_fee: "Joining & annual fee",
+  bank_fee_structure: "Charges",
+  redemption: "Rewards & redemption",
+  bank_exclusions: "Exclusions",
+};
+const EMPLOYMENT: Record<string, string> = { both: "Salaried & self-employed", salaried: "Salaried", self_employed: "Self-employed" };
+
+function extractDetails(raw: any): CardDetails {
+  const seen = new Set<string>();
+  const faqs = Object.entries(FAQ_TOPICS).map(([key, topic]) => {
+    const blogs = (raw.product_blogs || []).filter((b: any) => String(b?.blog_type || "").toLowerCase() === key);
+    const items: CardFaq[] = [];
+    for (const b of blogs) {
+      for (const f of Array.isArray(b?.faqs) ? b.faqs : []) {
+        const q = clean(f?.question).replace(/^q\.\s*/i, "");
+        const a = clean(f?.answer).replace(/^a\.\s*/i, "");
+        if (!q || !a || seen.has(q.toLowerCase())) continue;
+        seen.add(q.toLowerCase());
+        items.push({ q, a });
+      }
+    }
+    return { topic, items };
+  }).filter((g) => g.items.length);
+
+  const age = clean(raw.age_criteria_comment) || (clean(raw.age_criteria) ? `${clean(raw.age_criteria)} years` : "");
+  const eligibility = [
+    { label: "Age", value: age },
+    { label: "Employment", value: EMPLOYMENT[String(raw.employment_type || "").toLowerCase()] || clean(raw.employment_type) },
+    { label: "Income", value: clean(raw.income_comment) },
+    { label: "Credit score", value: clean(raw.crif_comment) },
+    { label: "New to credit", value: raw.new_to_credit === true ? "Yes — no credit history needed" : "" },
+  ].filter((e) => e.value);
+
+  const exclusions = [...new Set(
+    [raw.exclusion_earnings, raw.exclusion_spends]
+      .flatMap((v) => clean(v).replace(/;/g, "").split(","))
+      .map((x) => x.trim()).filter(Boolean)
+  )];
+
+  return {
+    joiningFeeNote: [clean(raw.joining_fee_offset), clean(raw.joining_fee_comment)].filter(Boolean),
+    annualFeeNote: [clean(raw.annual_fee_waiver), clean(raw.annual_fee_comment)].filter(Boolean),
+    rewardRate: clean(raw.reward_conversion_rate),
+    redemption: htmlList(raw.redemption_options),
+    catalogueUrl: httpsUrl(raw.redemption_catalogue),
+    eligibility,
+    exclusions,
+    tnc: clean(raw.tnc),
+    faqs,
+  };
+}
+
 function normalize(raw: any): Card {
   const networks = String(raw.card_type || "")
     .split(",")
@@ -196,6 +318,7 @@ function normalize(raw: any): Card {
     })),
     rates: parseRates(uspsRaw),
     isFD: detectFD(raw, alias),
+    minFD: parseMinFD(raw),
     raw: {
       id: raw.id,
       name,
@@ -221,10 +344,11 @@ function normalize(raw: any): Card {
 // multi-second, feedback-less wait is what made buttons feel like they needed
 // several clicks. Cache the normalized result in memory for a short TTL instead.
 const CACHE_TTL_MS = 5 * 60 * 1000;
-let cache: { data: Card[]; ts: number } | null = null;
-let inflight: Promise<Card[]> | null = null;
+type Catalog = { cards: Card[]; details: Map<string, CardDetails> };
+let cache: { data: Catalog; ts: number } | null = null;
+let inflight: Promise<Catalog> | null = null;
 
-async function fetchCards(): Promise<Card[]> {
+async function fetchCatalog(): Promise<Catalog> {
   const res = await fetch(CARDS_URL, {
     headers: { "Content-Type": "application/json" },
     cache: "no-store",
@@ -232,26 +356,40 @@ async function fetchCards(): Promise<Card[]> {
   if (!res.ok) throw new Error(`Card API ${res.status}`);
   const json = await res.json();
   const data: any[] = Array.isArray(json?.data) ? json.data : [];
-  return data
-    .map(normalize)
+  const details = new Map<string, CardDetails>();
+  const cards = data
+    .map((raw) => {
+      const card = normalize(raw);
+      details.set(card.alias, extractDetails(raw));
+      return card;
+    })
     .filter((c) => c.name)
     .sort((a, b) => a.priority - b.priority);
+  return { cards, details };
 }
 
-export async function getCards(): Promise<Card[]> {
+async function getCatalog(): Promise<Catalog> {
   if (cache && Date.now() - cache.ts < CACHE_TTL_MS) return cache.data;
   if (inflight) return inflight;
-  inflight = fetchCards()
+  inflight = fetchCatalog()
     .then((data) => {
       cache = { data, ts: Date.now() };
       return data;
     })
     .catch((err) => {
       console.error("[publicCards] fetch failed:", err);
-      return cache?.data ?? [];
+      return cache?.data ?? { cards: [], details: new Map() };
     })
     .finally(() => {
       inflight = null;
     });
   return inflight;
+}
+
+export async function getCards(): Promise<Card[]> {
+  return (await getCatalog()).cards;
+}
+
+export async function getCardDetails(alias: string): Promise<CardDetails | null> {
+  return (await getCatalog()).details.get(alias) ?? null;
 }

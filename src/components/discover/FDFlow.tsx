@@ -7,6 +7,7 @@ import { analytics } from "@/services/analytics";
 import { cleanName, normalizePhone, validateName, validatePhone } from "@/lib/leadValidation";
 import { type Lead, loadLead, storeLead, withLeadParam } from "@/lib/lead";
 import { Link } from "@/components/Link";
+import { rupee } from "@/lib/discoverEngine";
 import { CardObject } from "./CardObject";
 import { LazyPayLogo } from "./Logo";
 import { T, serif, display, cap, ctaBtn, applyBtn, feeGst } from "./theme";
@@ -149,6 +150,9 @@ function FDList({ cards, lead }: { cards: Card[]; lead: Lead }) {
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontFamily: serif, fontSize: 15.5, lineHeight: 1.2 }}>{c.name.trim()}</div>
                 <div style={{ fontSize: 11, color: T.mute, marginTop: 3, textTransform: "uppercase", letterSpacing: "0.08em" }}>{c.bank}</div>
+                <div style={{ display: "inline-block", marginTop: 6, fontSize: 11.5, fontWeight: 600, color: T.pink, background: "rgba(255,30,126,0.08)", borderRadius: 999, padding: "3px 9px" }}>
+                  {c.minFD != null ? `Min FD ${rupee(c.minFD)}` : "Min FD: check with bank"}
+                </div>
               </div>
               <span style={{ color: T.faint, fontSize: 20, lineHeight: 1 }}>›</span>
             </div>
