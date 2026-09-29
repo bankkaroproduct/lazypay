@@ -8,7 +8,8 @@ export type EventCategory =
     | 'Genius'
     | 'BeatMyCard'
     | 'Discovery'
-    | 'Engagement';
+    | 'Engagement'
+    | 'Lead';
 
 // Typed event interfaces for type safety
 interface BaseEvent {

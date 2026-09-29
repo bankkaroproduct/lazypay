@@ -52,6 +52,8 @@ export interface Card {
   usps: CardUsp[];
   /** Parsed reward rates by category, e.g. { dining: 0.05, online: 0.05 }. */
   rates: Partial<Record<SpendCat, number>>;
+  /** Fixed-Deposit backed (secured) card — approval without a credit score. */
+  isFD: boolean;
   /** Full-fidelity object for the existing Compare panel / redirect handler / detail. */
   raw: any;
 }
@@ -115,6 +117,36 @@ function parseRates(usps: any[]): Partial<Record<SpendCat, number>> {
   return r;
 }
 
+/** Curated FD cards whose own copy doesn't say "FD-backed". */
+const FD_ALIASES = new Set([
+  "idfc-first-wow-credit-card",
+  "idfc-first-wow-black-credit-card",
+  "sbi-unnati-credit-card",
+  "jupiter-edge-credit-card",
+  "yes-prosperity-reward-plus-credit-card",
+  "paizabazaar-step-up-sbm-credit-card",
+  "equitas-selfe-credit-card",
+]);
+/** Cards that only offer an optional FD-backed variant — not secured by default. */
+const FD_EXCLUDE = new Set(["hdfc-pixel-go-credit-card"]);
+const FD_TEXT = /fd[- ]backed|fixed deposit|secured (credit )?card|against (an |your )?fd|\bfd of\b/i;
+
+/**
+ * The API has no "secured" flag, so detect FD cards from the card's own copy
+ * (name, meta, eligibility comments, USPs). Blogs/FAQs are skipped on purpose —
+ * they mention *other* cards and cause false positives.
+ */
+function detectFD(raw: any, alias: string): boolean {
+  if (FD_EXCLUDE.has(alias)) return false;
+  if (FD_ALIASES.has(alias)) return true;
+  const own = [
+    raw.name, raw.meta_title, raw.meta_description,
+    raw.income_comment, raw.income_self_emp_comment, raw.crif_comment,
+    ...(raw.product_usps || []).map((u: any) => `${u?.header ?? ""} ${u?.description ?? ""}`),
+  ].join(" ");
+  return FD_TEXT.test(own);
+}
+
 function normalize(raw: any): Card {
   const networks = String(raw.card_type || "")
     .split(",")
@@ -163,6 +195,7 @@ function normalize(raw: any): Card {
       priority: Number(u.priority) || 99,
     })),
     rates: parseRates(uspsRaw),
+    isFD: detectFD(raw, alias),
     raw: {
       id: raw.id,
       name,

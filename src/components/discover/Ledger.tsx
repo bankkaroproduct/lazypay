@@ -27,20 +27,6 @@ const LENSES = [
   { key: "bills", label: "Bills & UPI", alias: "best-utility-credit-card" },
 ];
 
-/** Curated Fixed-Deposit / secured cards (approval without a credit score). */
-const FD_ALIASES = new Set([
-  "idfc-first-wow-credit-card",
-  "idfc-first-wow-black-credit-card",
-  "sbi-unnati-credit-card",
-  "jupiter-edge-credit-card",
-  "yes-prosperity-reward-plus-credit-card",
-  "paizabazaar-step-up-sbm-credit-card",
-  "equitas-selfe-credit-card",
-]);
-const FD_KEYWORDS = ["wow", "unnati", "step-up", "step up", "selfe", "insta easy", "against fd", "secured"];
-const isFDCard = (c: Card) =>
-  FD_ALIASES.has(c.alias) ||
-  FD_KEYWORDS.some((k) => c.name.toLowerCase().includes(k));
 const FEE_OPTIONS = [
   { k: "all", label: "Any fee" }, { k: "free", label: "Lifetime free" },
   { k: "0-1000", label: "≤ ₹1,000" }, { k: "1000-2500", label: "₹1k–2.5k" },
@@ -51,7 +37,7 @@ const GRID = "44px 1fr 108px 120px 120px 150px";
 
 const matchesLens = (c: Card, key: string) => {
   if (key === "all") return true;
-  if (key === "fd") return isFDCard(c);
+  if (key === "fd") return c.isFD;
   const names = c.tags.map((t) => t.name.toLowerCase());
   const needle: Record<string, string[]> = {
     shopping: ["shopping"], travel: ["travel"], dining: ["dining"], food: ["food"],
