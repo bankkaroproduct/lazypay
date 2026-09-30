@@ -19,11 +19,15 @@ export function storeLead(l: Lead | null) {
   } catch { /* ignore */ }
 }
 
-/** Add the lead to a partner tracking link as p2=<name>_<number>. */
+/**
+ * Add the lead to a partner tracking link as p2=<name>_<number>. Partner links
+ * come as `p1={click_id}&p2={user_id}`: p2 takes the lead and p1 is left empty
+ * (as the other partner sites send it) — get-link rejects the raw braces.
+ */
 export function withLeadParam(url: string, lead: Lead | null): string {
   if (!lead) return url;
   try {
-    const u = new URL(url);
+    const u = new URL(url.trim().replace("{click_id}", ""));
     u.searchParams.set("p2", `${lead.name}_${lead.phone}`);
     return u.toString();
   } catch {

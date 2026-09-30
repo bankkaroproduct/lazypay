@@ -1,14 +1,18 @@
 /**
- * Card data source for the redesigned "Ledger" experience.
+ * Card data source for the redesigned "Ledger" experience (server-only).
  *
- * Uses BankKaro's public, keyless endpoint. When the partner API key is set,
- * point CARDS_URL at the authenticated proxy route — the normalized shape
- * below is all the UI depends on, so nothing downstream changes.
+ * Primary: the partner cards API (PARTNER_BASE_URL/cardgenius/cards) with the
+ * partner token — its apply links carry lazypay's own campaign ids and the
+ * p1={click_id} / p2={user_id} slots. Fallback: BankKaro's public, keyless feed
+ * (generic campaigns) so the site still renders if the partner API is down.
+ * Both return the same raw shape, so normalize() below serves either.
  */
 
-const CARDS_URL =
+const PUBLIC_CARDS_URL =
   process.env.PUBLIC_CARDS_URL ||
   "https://bk-prod-external.bankkaro.com/sp/api/cards";
+const PARTNER_BASE_URL = process.env.PARTNER_BASE_URL || "https://platform.bankkaro.com/partner";
+const PARTNER_TOKEN_URL = process.env.PARTNER_TOKEN_URL || "https://platform.bankkaro.com/partner/token";
 
 export interface CardTag {
   id: number;
@@ -348,14 +352,53 @@ type Catalog = { cards: Card[]; details: Map<string, CardDetails> };
 let cache: { data: Catalog; ts: number } | null = null;
 let inflight: Promise<Catalog> | null = null;
 
-async function fetchCatalog(): Promise<Catalog> {
-  const res = await fetch(CARDS_URL, {
+async function fetchPartnerRaw(): Promise<any[]> {
+  const apiKey = process.env.PARTNER_API_KEY?.trim();
+  if (!apiKey) throw new Error("PARTNER_API_KEY not set");
+  const tokenRes = await fetch(PARTNER_TOKEN_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ "x-api-key": apiKey }),
+    cache: "no-store",
+  });
+  const token = (await tokenRes.json().catch(() => null))?.data?.jwttoken;
+  if (!token) throw new Error(`Partner token ${tokenRes.status}`);
+
+  const res = await fetch(`${PARTNER_BASE_URL}/cardgenius/cards`, {
+    headers: { "Content-Type": "application/json", "partner-token": token },
+    cache: "no-store",
+  });
+  if (!res.ok) throw new Error(`Partner cards API ${res.status}`);
+  const json = await res.json();
+  if (!Array.isArray(json?.data) || !json.data.length) throw new Error("Partner cards API returned no cards");
+  return json.data;
+}
+
+async function fetchPublicRaw(): Promise<any[]> {
+  const res = await fetch(PUBLIC_CARDS_URL, {
     headers: { "Content-Type": "application/json" },
     cache: "no-store",
   });
   if (!res.ok) throw new Error(`Card API ${res.status}`);
   const json = await res.json();
-  const data: any[] = Array.isArray(json?.data) ? json.data : [];
+  return Array.isArray(json?.data) ? json.data : [];
+}
+
+async function fetchCatalog(): Promise<Catalog> {
+  const [partner, pub] = await Promise.allSettled([fetchPartnerRaw(), fetchPublicRaw()]);
+  let data: any[];
+  if (partner.status === "fulfilled") {
+    data = partner.value;
+    // The partner API has no product_blogs (FAQs, some min-FD answers) — take them from the public feed.
+    if (pub.status === "fulfilled") {
+      const blogs = new Map(pub.value.map((r: any) => [r.seo_card_alias || r.card_alias, r.product_blogs]));
+      data = data.map((r: any) => (r.product_blogs ? r : { ...r, product_blogs: blogs.get(r.seo_card_alias || r.card_alias) }));
+    }
+  } else {
+    console.error("[publicCards] partner cards API failed, using public feed:", partner.reason);
+    if (pub.status === "rejected") throw pub.reason;
+    data = pub.value;
+  }
   const details = new Map<string, CardDetails>();
   const cards = data
     .map((raw) => {
