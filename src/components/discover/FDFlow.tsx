@@ -69,8 +69,9 @@ function LeadForm({ onDone }: { onDone: (l: Lead) => void }) {
     setTouched({ name: true, phone: true });
     if (nameErr || phoneErr) return;
     analytics.trackEvent({ category: "Lead", action: "Submit", label: "FD flow" });
-    trackLeadSubmitted();
-    onDone({ name: cleanName(name), phone: normalizePhone(phone) });
+    const lead = { name: cleanName(name), phone: normalizePhone(phone) };
+    trackLeadSubmitted(lead.name, lead.phone);
+    onDone(lead);
   };
 
   const field = (err: string | false) => ({

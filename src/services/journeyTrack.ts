@@ -49,7 +49,8 @@ export const trackJourneyEvent = sendJourneyEvent;
 
 // --- FD flow: lead step ---
 export const trackLeadPageView = () => sendJourneyEvent("fd_lead_page_view");
-export const trackLeadSubmitted = () => sendJourneyEvent("fd_lead_submitted");
+export const trackLeadSubmitted = (name: string, mobile: string) =>
+  sendJourneyEvent("fd_lead_submitted", { name, mobile });
 export const trackLeadValidationFailed = (field: string, reason: string) =>
   sendJourneyEvent("fd_lead_validation_failed", { field, reason });
 
