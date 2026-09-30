@@ -8,6 +8,7 @@ import { cleanName, normalizePhone, validateName, validatePhone } from "@/lib/le
 import { type Lead, loadLead, storeLead, withLeadParam } from "@/lib/lead";
 import { Link } from "@/components/Link";
 import { rupee } from "@/lib/discoverEngine";
+import { trackLeadPageView, trackLeadSubmitted, trackFDListView, trackCardClicked, trackListingApplyNowClicked } from "@/services/journeyTrack";
 import { CardObject } from "./CardObject";
 import { LazyPayLogo } from "./Logo";
 import { T, serif, display, cap, ctaBtn, applyBtn, feeGst } from "./theme";
@@ -56,6 +57,8 @@ function LeadForm({ onDone }: { onDone: (l: Lead) => void }) {
   const [phone, setPhone] = useState("");
   const [touched, setTouched] = useState({ name: false, phone: false });
 
+  useEffect(() => { trackLeadPageView(); }, []);
+
   const nameErr = validateName(name);
   const phoneErr = validatePhone(phone);
   const showName = touched.name && nameErr;
@@ -66,6 +69,7 @@ function LeadForm({ onDone }: { onDone: (l: Lead) => void }) {
     setTouched({ name: true, phone: true });
     if (nameErr || phoneErr) return;
     analytics.trackEvent({ category: "Lead", action: "Submit", label: "FD flow" });
+    trackLeadSubmitted();
     onDone({ name: cleanName(name), phone: normalizePhone(phone) });
   };
 
@@ -121,10 +125,13 @@ function LeadForm({ onDone }: { onDone: (l: Lead) => void }) {
 function FDList({ cards, lead }: { cards: Card[]; lead: Lead }) {
   const first = lead.name.split(" ")[0];
 
+  useEffect(() => { trackFDListView(cards.length); }, [cards.length]);
+
   const apply = (e: MouseEvent, c: Card) => {
     e.preventDefault(); e.stopPropagation();
     analytics.trackCardAction("Apply Now", c.name);
-    redirectToCardApplication(c.raw, { networkUrl: withLeadParam(c.raw.network_url, lead) });
+    trackListingApplyNowClicked(c.alias, "fd_list");
+    redirectToCardApplication(c.raw, { networkUrl: withLeadParam(c.raw.network_url, lead), source: "fd_list" });
   };
 
   return (
@@ -142,8 +149,9 @@ function FDList({ cards, lead }: { cards: Card[]; lead: Lead }) {
       )}
 
       <div className="flex flex-col" style={{ gap: 12 }}>
-        {cards.map((c) => (
-          <Link key={c.id} to={`/cards/${c.alias}?from=fd`} onClick={() => analytics.trackCardAction("View Details", c.name)}
+        {cards.map((c, i) => (
+          <Link key={c.id} to={`/cards/${c.alias}?from=fd`}
+            onClick={() => { analytics.trackCardAction("View Details", c.name); trackCardClicked(c.alias, c.name, c.bank, i + 1); }}
             style={{ display: "block", border: `1px solid ${T.line}`, borderRadius: 18, padding: 14, background: T.surface, color: T.ink, textDecoration: "none" }}>
             <div className="flex items-center" style={{ gap: 12 }}>
               <CardObject card={c} />

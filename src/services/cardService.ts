@@ -118,4 +118,19 @@ export const cardService = {
     });
     return response.json();
   },
+
+  /**
+   * Generate the partner exit link for an apply URL.
+   * /api/proxy/get-link → https://platform.bankkaro.com/partner/get-link (proxy attaches
+   * the partner-token). Returns { data: { url, exitid } }: the final URL to send the
+   * user to and the exit_id Journey Track uses to correlate the redirect.
+   */
+  async getExitLink(url: string) {
+    const response = await authManager.makeAuthenticatedRequest(`${BASE_URL}/get-link`, {
+      method: 'POST',
+      body: JSON.stringify({ url }),
+    });
+    if (!response.ok) throw new Error(`get-link ${response.status}`);
+    return response.json();
+  },
 };

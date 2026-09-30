@@ -41,6 +41,9 @@ export interface RedirectParams {
   bankLogo?: string;
   cardName: string;
   cardId?: string | number;
+  /** For the Journey Track apply_redirect event. */
+  cardAlias?: string;
+  source?: string;
 }
 
 /**
@@ -100,6 +103,10 @@ export const openRedirectInterstitial = (params: RedirectParams): Window | null 
   if (cardId) {
     queryParams.append('cardId', String(cardId));
   }
+
+  // The interstitial resolves get-link (exit_id) and fires apply_redirect with these.
+  if (params.cardAlias) queryParams.append('alias', params.cardAlias);
+  if (params.source) queryParams.append('source', params.source);
 
   // Build the interstitial URL
   const interstitialUrl = `/redirect?${queryParams.toString()}`;
@@ -279,7 +286,9 @@ export const redirectToCardApplication = (card: any, overrides: Partial<Redirect
     bankName: overrides.bankName ?? extractBankName(card),
     bankLogo: overrides.bankLogo ?? extractBankLogo(card),
     cardName: overrides.cardName ?? card?.name ?? 'Credit Card',
-    cardId: overrides.cardId ?? card?.id
+    cardId: overrides.cardId ?? card?.id,
+    cardAlias: overrides.cardAlias ?? card?.seo_card_alias ?? card?.card_alias,
+    source: overrides.source,
   });
 
   return Boolean(windowRef);

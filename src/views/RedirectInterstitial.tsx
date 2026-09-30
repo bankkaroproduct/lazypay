@@ -5,6 +5,36 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { ExternalLink, ArrowLeft, CheckCircle2, AlertCircle } from 'lucide-react';
+import { cardService } from '@/services/cardService';
+import { trackApplyRedirect } from '@/services/journeyTrack';
+
+type ExitLink = { url: string; exitId: string | null };
+
+/** Resolve after `ms` with `value` — caps how long the user waits on get-link / tracking. */
+const within = <T,>(p: Promise<T>, ms: number, value: T) =>
+  Promise.race([p, new Promise<T>((r) => setTimeout(() => r(value), ms))]);
+
+/**
+ * get-link turns the apply URL into the partner exit link and returns its exit_id.
+ * Runs here (during the countdown) rather than before window.open, because opening a
+ * tab after an await is blocked as a popup on iOS Safari. Falls back to the original
+ * URL so the redirect never breaks.
+ */
+async function resolveExitLink(targetUrl: string): Promise<ExitLink> {
+  try {
+    const json: any = await cardService.getExitLink(targetUrl);
+    const d = json?.data ?? {};
+    const exitRaw = d.exitid ?? d.exit_id ?? d.exitId ?? null;
+    let url = targetUrl;
+    if (typeof d.url === 'string' && d.url) {
+      try { if (new URL(d.url).protocol === 'https:') url = d.url; } catch { /* keep original */ }
+    }
+    return { url, exitId: exitRaw ? String(exitRaw) : null };
+  } catch (err) {
+    console.error('[get-link] failed, using original URL:', err);
+    return { url: targetUrl, exitId: null };
+  }
+}
 
 const REDIRECT_ANALYTICS_ENABLED = (process.env.NEXT_PUBLIC_ENABLE_REDIRECT_ANALYTICS || '').toString().toLowerCase() === 'true';
 
@@ -32,6 +62,7 @@ export default function RedirectInterstitial() {
   });
   const countdownRef = useRef<NodeJS.Timeout | null>(null);
   const hasRedirected = useRef(false);
+  const exitLink = useRef<Promise<ExitLink> | null>(null);
 
   useEffect(() => {
     // Parse URL parameters
@@ -84,6 +115,14 @@ export default function RedirectInterstitial() {
       cardName
     }));
 
+    // Resolve the exit link while the countdown runs.
+    exitLink.current = resolveExitLink(targetUrl);
+    exitLink.current.then(({ url }) => {
+      try {
+        setState(prev => ({ ...prev, targetUrl: url, bankDomain: new URL(url).hostname.replace('www.', '') }));
+      } catch { /* keep original */ }
+    });
+
     // Start countdown
     let count = 3;
     countdownRef.current = setInterval(() => {
@@ -102,9 +141,20 @@ export default function RedirectInterstitial() {
     };
   }, [searchParams]);
 
-  const performRedirect = (url: string) => {
+  const performRedirect = async (fallbackUrl: string) => {
     if (hasRedirected.current) return;
     hasRedirected.current = true;
+
+    const { url, exitId } = exitLink.current
+      ? await within(exitLink.current, 4000, { url: fallbackUrl, exitId: null })
+      : { url: fallbackUrl, exitId: null };
+
+    // Journey Track stores the exit_id against this redirect. Short cap so the user isn't held up.
+    await within(
+      trackApplyRedirect(searchParams.get('alias') || state.cardName, searchParams.get('source') || '', exitId),
+      1500,
+      undefined
+    );
 
     try {
       // Track event
@@ -259,8 +309,7 @@ export default function RedirectInterstitial() {
         <div className="mb-6">
           <a
             href={state.targetUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+            onClick={(e) => { e.preventDefault(); handleContinue(); }}
             className="text-sm text-primary hover:underline inline-flex items-center gap-1"
           >
             Open bank site (no wait)

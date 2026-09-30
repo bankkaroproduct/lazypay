@@ -13,6 +13,8 @@ import { redirectToCardApplication } from "@/utils/redirectHandler";
 import { Link } from "@/components/Link";
 import { loadLead, withLeadParam } from "@/lib/lead";
 import { analytics } from "@/services/analytics";
+import { trackCardDetailsPageView, trackCardDetailsBackClicked, trackCardDetailsApplyNowClicked } from "@/services/journeyTrack";
+import { useEffect } from "react";
 
 /**
  * `fd` = opened from the FD flow: only links back to it (no nav, Card Genius,
@@ -28,10 +30,15 @@ export default function CardDetailView({ card, details, fd = false }: { card: Ca
     u.header.trim() && all.findIndex((x) => x.header.trim().toLowerCase() === u.header.trim().toLowerCase()) === i);
   const minFD = card.minFD != null ? rupee(card.minFD) : null;
 
+  useEffect(() => {
+    trackCardDetailsPageView(card.alias, card.name, card.bank, fd ? "fd_list" : "direct");
+  }, [card.alias, card.name, card.bank, fd]);
+
   const apply = () => {
     analytics.trackCardAction("Apply Now", card.name);
-    if (fd) redirectToCardApplication(card.raw, { networkUrl: withLeadParam(card.raw.network_url, loadLead()) });
-    else redirectToCardApplication(card.raw);
+    trackCardDetailsApplyNowClicked(card.alias, card.name);
+    if (fd) redirectToCardApplication(card.raw, { networkUrl: withLeadParam(card.raw.network_url, loadLead()), source: "card_details" });
+    else redirectToCardApplication(card.raw, { source: "card_details" });
   };
 
   return (
@@ -47,7 +54,9 @@ export default function CardDetailView({ card, details, fd = false }: { card: Ca
 
       <main style={{ maxWidth: 1000, margin: "0 auto", padding: "24px 24px 120px" }}>
         <div style={{ marginBottom: 24 }}>
-          {fd ? <BackPill to="/" label="FD cards" /> : <BackPill to="/cards" label="All cards" />}
+          <span onClick={() => trackCardDetailsBackClicked(card.alias)}>
+            {fd ? <BackPill to="/" label="FD cards" /> : <BackPill to="/cards" label="All cards" />}
+          </span>
         </div>
 
         {card.isFD && (
