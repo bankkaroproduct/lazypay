@@ -1,6 +1,6 @@
 # LAZYPAY Frontend
 
-A whitelabel credit card comparison and recommendation platform built with Next.js. Can be branded for any partner via environment variables.
+LazyPay's credit card discovery site (Next.js), powered by BankKaro's partner API.
 
 ## Quick Start
 
@@ -16,32 +16,14 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Environment Setup
 
-Copy the example below into a `.env` file in the project root (never commit this file):
+All variables are listed in [`.env.example`](.env.example). For local dev:
 
-```env
-# Brand / whitelabel
-NEXT_PUBLIC_BRAND_NAME=YourBrand Cards
-NEXT_PUBLIC_BRAND_TAGLINE=Find Your Perfect Credit Card
-NEXT_PUBLIC_BRAND_EMAIL=support@yourbrand.com
-NEXT_PUBLIC_BRAND_LOGO=/logo.png
-
-# Theme colors (hex or hsl)
-NEXT_PUBLIC_PRIMARY_COLOR=#2563eb
-NEXT_PUBLIC_SECONDARY_COLOR=#7c3aed
-
-# Partner API
-PARTNER_API_KEY=your_api_key_here
-PARTNER_TOKEN_URL=https://your-token-endpoint.com/token
-
-# Analytics (optional)
-NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
+```bash
+cp .env.example .env.local   # then fill in PARTNER_API_KEY
 ```
 
-## Whitelabel Configuration
-
-1. Add your `logo.png` and `favicon.png` to the `public/` folder.
-2. Set `NEXT_PUBLIC_*` variables in `.env` for your brand.
-3. Each partner deployment gets its own Vercel project pointing to the same repo, with different environment variables.
+`.env.local` is git-ignored — never commit real keys. In production, set the same
+variables in Vercel → Project Settings → Environment Variables and redeploy.
 
 ## Features
 
@@ -79,6 +61,6 @@ src/
 
 ## Deployment (Vercel)
 
-1. Connect this repo to a new Vercel project.
-2. Go to **Project Settings → Environment Variables** and add all `NEXT_PUBLIC_*` and `PARTNER_*` variables.
-3. Deploy. Each brand/partner gets its own Vercel project.
+1. Connect this repo to the LazyPay Vercel project.
+2. In **Project Settings → Environment Variables**, add every variable from `.env.example` with real values.
+3. Deploy.

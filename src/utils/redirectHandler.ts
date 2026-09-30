@@ -227,7 +227,7 @@ const cleanUrl = (rawUrl: string): string => {
 
     // Replace known placeholders with actual values
     let url = rawUrl.trim()
-      .replace('{user_id}', partnerName)  // e.g. 'tide'
+      .replace('{user_id}', partnerName)  // e.g. 'lazypay'
       .replace('{click_id}', '');         // leave empty
 
     // Remove any remaining unfilled placeholders
