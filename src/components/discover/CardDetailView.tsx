@@ -7,6 +7,7 @@ import { CardObject, Stars } from "./CardObject";
 import { Masthead } from "./Masthead";
 import { BackPill } from "./BackPill";
 import { DiscoverFooter } from "./DiscoverFooter";
+import { FDFooter } from "./FDFooter";
 import { useComparison } from "@/contexts/ComparisonContext";
 import { getCardKey } from "@/utils/cardAlias";
 import { redirectToCardApplication } from "@/utils/redirectHandler";
@@ -268,7 +269,11 @@ export default function CardDetailView({ card, details, fd = false }: { card: Ca
         </div>
       </main>
 
-      {!fd && <DiscoverFooter />}
+      {fd ? (
+        <div style={{ maxWidth: 1000, margin: "0 auto", padding: "0 24px" }}>
+          <FDFooter padBottom={90} />
+        </div>
+      ) : <DiscoverFooter />}
 
       {/* Sticky bottom bar */}
       <div

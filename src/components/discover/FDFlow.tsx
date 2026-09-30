@@ -11,6 +11,7 @@ import { rupee } from "@/lib/discoverEngine";
 import { trackLeadPageView, trackLeadSubmitted, trackFDListView, trackCardClicked, trackListingApplyNowClicked } from "@/services/journeyTrack";
 import { CardObject } from "./CardObject";
 import { LazyPayLogo } from "./Logo";
+import { FDFooter } from "./FDFooter";
 import { T, serif, display, cap, ctaBtn, applyBtn, feeGst } from "./theme";
 
 /** Step 1: name + mobile. Step 2: the Fixed-Deposit card list. */
@@ -38,6 +39,7 @@ export default function FDFlow({ cards }: { cards: Card[] }) {
             )}
           </div>
           {lead ? <FDList cards={cards} lead={lead} /> : <LeadForm onDone={saveLead} />}
+          <FDFooter />
         </div>
       </div>
 
