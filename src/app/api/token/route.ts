@@ -26,6 +26,7 @@ const ALLOWED_ORIGINS = [
     'https://shubham-bank-expert-bankkaroproducts-projects.vercel.app',
     'https://lazypay.com',
     'https://lazypay.vercel.app',
+    'https://lazypay.bankkaro.com',
 ].filter(Boolean) as string[];
 
 export async function POST(request: NextRequest) {
