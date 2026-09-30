@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: `${brandConfig.name} — Credit cards on your Fixed Deposit`,
   description: `${brandConfig.name} — get a credit card backed by your FD. No credit score needed.`,
   robots: "index, follow",
-  alternates: { canonical: process.env.NEXT_PUBLIC_APP_URL || "https://lazypay.com" },
+  alternates: { canonical: process.env.NEXT_PUBLIC_APP_URL || "https://lazypay.bankkaro.com" },
 };
 
 // Current flow: lead capture → FD cards only. The full app home (AppShell) is
