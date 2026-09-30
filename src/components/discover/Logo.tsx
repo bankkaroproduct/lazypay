@@ -1,12 +1,13 @@
 "use client";
 
-import { T } from "./theme";
-
 /**
- * LazyPay brand lockup: the layered pink play-mark + "LazyPay" wordmark.
- * Recreated as inline SVG so it stays crisp at any size and in any theme.
- * `mark` alone renders just the play-mark (for tight spaces / favicons).
+ * LazyPay brand lockup: the layered play-mark + "LAZYPAY" wordmark (official SVG).
+ * `height` sets the rendered height; width follows the artwork's aspect ratio.
+ * `markOnly` renders just the play-mark (for tight spaces / favicons).
+ * `dark` swaps the black/navy parts to white for dark backgrounds.
  */
+const PINK = "#EE3362";
+
 export function LazyPayLogo({
   height = 22,
   dark = false,
@@ -16,34 +17,35 @@ export function LazyPayLogo({
   dark?: boolean;
   markOnly?: boolean;
 }) {
-  const ink = dark ? "#FFFFFF" : "#1A1620";
-  return (
-    <span style={{ display: "inline-flex", alignItems: "center", gap: height * 0.4, lineHeight: 1 }}>
-      <svg
-        height={height}
-        viewBox="0 0 52 48"
-        fill="none"
-        style={{ display: "block", flex: "none" }}
-        aria-hidden="true"
-      >
-        {/* back triangle */}
-        <path d="M4 4 L4 44 L38 24 Z" fill={ink} />
-        {/* front play triangle (brand pink) */}
-        <path d="M16 8 L16 40 L50 24 Z" fill={T.pink} />
+  const ink = dark ? "#FFFFFF" : "#000000";
+  const navy = dark ? "#FFFFFF" : "#111333";
+
+  const mark = (
+    <>
+      <path fillRule="evenodd" clipRule="evenodd" d="M3.11518 23.1921C2.32325 23.1921 2.10547 22.8113 2.10547 22.1705V4.86341C2.10547 4.06207 2.48164 3.8418 3.11518 3.8418H6.54157C7.15532 3.8418 7.55128 4.04205 7.55128 4.86341V18.2442" fill={PINK} />
+      <path fillRule="evenodd" clipRule="evenodd" d="M3.11542 2.23789L23.9299 9.76968C24.8208 10.1902 24.9597 10.4308 24.9597 11.2118V14.5771C24.9597 15.3383 24.8208 15.599 23.9299 16.0195L3.11542 23.591C2.66006 23.7716 2.10571 23.6311 2.10571 22.9703V19.0844C2.10571 18.1829 2.38256 17.9226 3.21474 17.6419L17.5922 12.8746L3.21474 8.06688C2.38256 7.78652 2.10571 7.54622 2.10571 6.60471V2.89905C2.12519 2.19784 2.67986 2.05766 3.11542 2.23789Z" fill={navy} />
+      <path fillRule="evenodd" clipRule="evenodd" d="M10.5021 2.23789L31.3166 9.76968C32.2078 10.1902 32.3464 10.4308 32.3464 11.2118V14.5771C32.3464 15.3383 32.2078 15.599 31.3166 16.0195L10.5021 23.591C10.0468 23.7716 9.49243 23.6311 9.49243 22.9703V19.0844C9.49243 18.1829 9.76928 17.9226 10.6015 17.6419L24.9789 12.8746L10.6015 8.06688C9.76961 7.78652 9.49243 7.54622 9.49243 6.60471V2.89905C9.49243 2.19784 10.0468 2.05766 10.5021 2.23789Z" fill={PINK} />
+    </>
+  );
+
+  if (markOnly) {
+    return (
+      <svg height={height} viewBox="1.6 1.6 31.3 22.6" fill="none" style={{ display: "block", flex: "none" }} aria-label="LazyPay" role="img">
+        {mark}
       </svg>
-      {!markOnly && (
-        <span
-          style={{
-            fontFamily: "var(--font-body), system-ui, sans-serif",
-            fontWeight: 800,
-            fontSize: height * 0.9,
-            letterSpacing: "-0.02em",
-            color: ink,
-          }}
-        >
-          Lazy<span style={{ color: T.pink }}>Pay</span>
-        </span>
-      )}
-    </span>
+    );
+  }
+
+  return (
+    <svg height={height} viewBox="0 0 160 26" fill="none" style={{ display: "block", flex: "none" }} aria-label="LazyPay" role="img">
+      <path fillRule="evenodd" clipRule="evenodd" d="M53.9321 19.1632V21.5469C53.9321 22.0679 53.7539 22.388 53.1003 22.388H41.2178C40.5641 22.388 40.3862 22.0679 40.3862 21.5469V4.19979C40.3862 3.53863 40.703 3.3584 41.2178 3.3584H44.0499C44.565 3.3584 44.8814 3.53863 44.8814 4.19979V18.3219H53.1201C53.7737 18.3219 53.9321 18.6226 53.9321 19.1632Z" fill={ink} />
+      <path fillRule="evenodd" clipRule="evenodd" d="M90.1746 19.1647V21.5484C90.1746 22.0694 89.9961 22.3894 89.3428 22.3894H76.866C76.1331 22.3894 75.9949 22.2493 75.9949 21.5484V19.2648C75.9949 18.6037 76.371 18.1832 76.371 18.1832L84.0946 7.38626H77.1039C76.4502 7.38626 76.272 7.06586 76.272 6.54487V4.16121C76.272 3.64023 76.4502 3.31982 77.1039 3.31982H88.6099C89.2633 3.31982 89.4418 3.64023 89.4418 4.16121V6.4047C89.4418 6.78518 89.3824 7.14596 89.0656 7.52644L81.4014 18.283H89.3428C89.9961 18.3233 90.1746 18.624 90.1746 19.1647Z" fill={ink} />
+      <path fillRule="evenodd" clipRule="evenodd" d="M108.869 4.16102L102.988 15.2383V21.5482C102.988 22.2094 102.671 22.3893 102.156 22.3893H99.3241C98.7695 22.3893 98.492 22.2094 98.492 21.5482V15.2383L92.3529 4.16102C92.2143 3.84062 92.2935 3.35968 92.8086 3.35968H96.0961C96.7494 3.35968 97.0269 3.41976 97.4427 4.24112L100.809 10.4509L104.037 4.24112C104.414 3.47983 104.691 3.35968 105.344 3.35968H108.434C108.988 3.31963 109.008 3.82059 108.869 4.16102Z" fill={ink} />
+      <path fillRule="evenodd" clipRule="evenodd" d="M122.078 10.1093C122.078 8.60677 121.108 7.3849 118.89 7.3849H116.157V12.7733H118.89C121.108 12.8134 122.078 11.5915 122.078 10.1093ZM126.396 10.0492C126.396 14.0756 123.762 16.7396 118.87 16.7396H116.137V21.547C116.137 22.2082 115.82 22.3884 115.305 22.3884H112.473C111.958 22.3884 111.642 22.2082 111.642 21.547V4.20023C111.642 3.67924 111.82 3.35884 112.473 3.35884H118.91C123.801 3.31846 126.396 6.0629 126.396 10.0492Z" fill={ink} />
+      <path fillRule="evenodd" clipRule="evenodd" d="M157.726 4.16102L151.845 15.2383V21.5482C151.845 22.2094 151.528 22.3893 151.013 22.3893H148.181C147.626 22.3893 147.349 22.2094 147.349 21.5482V15.2383L141.21 4.16102C141.071 3.84062 141.15 3.35968 141.666 3.35968H144.953C145.606 3.35968 145.884 3.41976 146.3 4.24112L149.666 10.4509L152.894 4.24112C153.271 3.47983 153.548 3.35968 154.201 3.35968H157.291C157.826 3.31963 157.865 3.82059 157.726 4.16102Z" fill={ink} />
+      <path fillRule="evenodd" clipRule="evenodd" d="M56.1905 21.5078L62.2903 4.20078C62.6269 3.45951 62.8447 3.31934 63.4587 3.31934H66.1915C66.8056 3.31934 67.0234 3.41946 67.36 4.20078L73.4994 21.5078C73.638 21.8883 73.539 22.3492 72.9846 22.3492H69.7961C69.0633 22.3492 68.8653 22.1089 68.6274 21.4478L64.7855 9.46906L60.9437 21.4478C60.7058 22.1487 60.5276 22.3492 59.7357 22.3492H56.7251C56.1509 22.3492 56.0519 21.8883 56.1905 21.5078Z" fill={ink} />
+      <path fillRule="evenodd" clipRule="evenodd" d="M125.466 21.5078L131.565 4.20078C131.902 3.45951 132.12 3.31934 132.734 3.31934H135.467C136.081 3.31934 136.299 3.41946 136.635 4.20078L142.774 21.5078C142.913 21.8883 142.814 22.3492 142.259 22.3492H139.071C138.338 22.3492 138.14 22.1089 137.903 21.4478L134.06 9.46906L130.219 21.4478C129.981 22.1487 129.803 22.3492 129.011 22.3492H126C125.426 22.3492 125.327 21.8883 125.466 21.5078Z" fill={ink} />
+      {mark}
+    </svg>
   );
 }
