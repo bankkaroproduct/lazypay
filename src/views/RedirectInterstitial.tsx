@@ -20,16 +20,34 @@ const within = <T,>(p: Promise<T>, ms: number, value: T) =>
  * tab after an await is blocked as a popup on iOS Safari. Falls back to the original
  * URL so the redirect never breaks.
  */
+/** BankKaro's exit ID, e.g. TQ_1407_79_6abcbb0df9fa38534f1eab72 — embedded in the bank URL. */
+const EXIT_ID_RE = /TQ_\d+_\d+_[0-9a-f]{24}/i;
+
+/**
+ * get-link's `exitid` currently echoes the whole bank URL, with the TQ exit ID
+ * inside one of its params. Pull out just the ID; accept a bare ID as-is; a URL
+ * with no ID in it means none was issued.
+ */
+function pickExitId(exitRaw: string, url: string): string | null {
+  for (const v of [exitRaw, url]) {
+    let decoded = v;
+    try { decoded = decodeURIComponent(v); } catch { /* use raw */ }
+    const m = decoded.match(EXIT_ID_RE);
+    if (m) return m[0];
+  }
+  return exitRaw && !/^https?:\/\//i.test(exitRaw) ? exitRaw : null;
+}
+
 async function resolveExitLink(targetUrl: string): Promise<ExitLink> {
   try {
     const json: any = await cardService.getExitLink(targetUrl);
     const d = json?.data ?? {};
-    const exitRaw = d.exitid ?? d.exit_id ?? d.exitId ?? null;
+    const exitRaw = String(d.exitid ?? d.exit_id ?? d.exitId ?? '');
     let url = targetUrl;
     if (typeof d.url === 'string' && d.url) {
       try { if (new URL(d.url).protocol === 'https:') url = d.url; } catch { /* keep original */ }
     }
-    return { url, exitId: exitRaw ? String(exitRaw) : null };
+    return { url, exitId: pickExitId(exitRaw, url) };
   } catch (err) {
     console.error('[get-link] failed, using original URL:', err);
     return { url: targetUrl, exitId: null };
